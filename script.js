@@ -137,8 +137,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       const match = url.match(/canalesdeportivos\.net\/([a-zA-Z0-9_-]+\.php)/);
       if (match) {
         playUrl = `proxy.php?canal=${match[1]}`;
-        // Since we strip the anti-sandbox scripts in our proxy, we can use a strict sandbox that blocks all popups!
-        sandboxAttr = 'sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"';
+        // Keep allow-popups in sandbox to prevent player script failures
+        sandboxAttr = 'sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-forms"';
       }
     }
 

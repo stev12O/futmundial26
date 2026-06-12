@@ -49,6 +49,8 @@ if (!$allowed) {
 $referer = 'https://canalesdeportivos.net/';
 if (strpos($url, 'canalesdeportivos.net') !== false) {
     $referer = 'https://gopelotero.com/';
+} elseif (strpos($url, 'deepcathink.com') !== false) {
+    $referer = 'https://canalesdeportivos.net/';
 }
 
 $ch = curl_init();
@@ -69,13 +71,16 @@ if ($http_code !== 200 || !$response) {
     die("Error al cargar el recurso (HTTP " . $http_code . "). URL: " . htmlspecialchars($url));
 }
 
-// If it's HTML, we sanitize and inject the client-side hooks
+// If it's HTML, we sanitize and inject the client-side hooks and base href
 if (strpos($content_type, 'text/html') !== false || strpos($response, '<html') !== false) {
-    // Inject intelligent popup blocker and client-side iframe interceptor
+    // 1. Inject base href tag
+    $base_href = '<base href="' . htmlspecialchars($url) . '">';
+
+    // 2. Inject client-side hooks
     $client_hooks = '
     <script>
         (function() {
-            // 1. Block popups globally
+            // Block popups globally
             window.open = function(url, name, specs, replace) {
                 console.log("Popup blocked by FutMundial26 Proxy:", url);
                 return {
@@ -92,16 +97,18 @@ if (strpos($content_type, 'text/html') !== false || strpos($response, '<html') !
                 configurable: false
             });
 
-            // 2. Interceptor function to rewrite iframe URLs to go through proxy.php
+            // Interceptor function to rewrite iframe URLs to go through proxy.php
             function checkAndProxyIframe(iframe) {
                 if (!iframe) return;
-                var src = iframe.getAttribute("src");
-                if (src && (src.indexOf("streamtp") !== -1 || src.indexOf("canalesdeportivos.net") !== -1) && src.indexOf("proxy.php") === -1) {
-                    iframe.setAttribute("src", "proxy.php?url=" + encodeURIComponent(src));
+                var src = iframe.src; // Resolved absolute URL via browser base href
+                if (src && src.indexOf("https://crazydeportes.com/proxy.php") === -1 && src.indexOf("javascript:") !== 0 && src.indexOf("about:") !== 0) {
+                    if (src.indexOf("https://crazydeportes.com") !== 0) {
+                        iframe.src = "https://crazydeportes.com/proxy.php?url=" + encodeURIComponent(src);
+                    }
                 }
             }
 
-            // 3. Hook document.createElement to catch runtime iframe creation
+            // Hook document.createElement to catch runtime iframe creation
             var originalCreateElement = document.createElement;
             document.createElement = function(tag) {
                 var el = originalCreateElement.apply(this, arguments);
@@ -109,8 +116,17 @@ if (strpos($content_type, 'text/html') !== false || strpos($response, '<html') !
                     Object.defineProperty(el, "src", {
                         get: function() { return this.getAttribute("src"); },
                         set: function(val) {
-                            if (val && (val.indexOf("streamtp") !== -1 || val.indexOf("canalesdeportivos.net") !== -1) && val.indexOf("proxy.php") === -1) {
-                                val = "proxy.php?url=" + encodeURIComponent(val);
+                            if (val && val.indexOf("https://crazydeportes.com/proxy.php") === -1 && val.indexOf("javascript:") !== 0 && val.indexOf("about:") !== 0) {
+                                var absoluteUrl = val;
+                                // Resolve to absolute URL if relative
+                                if (val.indexOf("http") !== 0) {
+                                    var a = document.createElement("a");
+                                    a.href = val;
+                                    absoluteUrl = a.href;
+                                }
+                                if (absoluteUrl.indexOf("https://crazydeportes.com") !== 0) {
+                                    val = "https://crazydeportes.com/proxy.php?url=" + encodeURIComponent(absoluteUrl);
+                                }
                             }
                             this.setAttribute("src", val);
                         },
@@ -120,7 +136,7 @@ if (strpos($content_type, 'text/html') !== false || strpos($response, '<html') !
                 return el;
             };
 
-            // 4. Hook MutationObserver to catch iframes injected via innerHTML
+            // Hook MutationObserver to catch iframes injected via innerHTML
             var observer = new MutationObserver(function(mutations) {
                 mutations.forEach(function(mutation) {
                     mutation.addedNodes.forEach(function(node) {
@@ -134,7 +150,7 @@ if (strpos($content_type, 'text/html') !== false || strpos($response, '<html') !
                 });
             });
             
-            // Start observer as soon as documentElement is available
+            // Start observer
             if (document.documentElement) {
                 observer.observe(document.documentElement, { childList: true, subtree: true });
             } else {
@@ -143,13 +159,13 @@ if (strpos($content_type, 'text/html') !== false || strpos($response, '<html') !
                 });
             }
 
-            // 5. Hook document.write to catch legacy iframe insertion
+            // Hook document.write to catch legacy iframe insertion
             var originalWrite = document.write;
             document.write = function(html) {
                 if (typeof html === "string" && html.indexOf("<iframe") !== -1) {
                     html = html.replace(/src=["\'](https?:\/\/[^"\']+)["\']/g, function(match, url) {
-                        if ((url.indexOf("streamtp") !== -1 || url.indexOf("canalesdeportivos.net") !== -1) && url.indexOf("proxy.php") === -1) {
-                            return \'src="proxy.php?url=\' + encodeURIComponent(url) + \'"\';
+                        if (url.indexOf("https://crazydeportes.com") !== 0 && url.indexOf("proxy.php") === -1) {
+                            return \'src="https://crazydeportes.com/proxy.php?url=\' + encodeURIComponent(url) + \'"\';
                         }
                         return match;
                     });
@@ -160,8 +176,8 @@ if (strpos($content_type, 'text/html') !== false || strpos($response, '<html') !
     </script>
     ';
     
-    // Inject the client hooks at the very top of <head>
-    $response = preg_replace('/<head>/i', '<head>' . $client_hooks, $response);
+    // Inject base href and client hooks right after <head>
+    $response = preg_replace('/<head>/i', '<head>' . $base_href . $client_hooks, $response);
     
     // Remove third-party ad networks scripts
     $response = preg_replace('/<script id="aclib"[^>]*>.*?<\/script>/is', '', $response);
@@ -169,7 +185,7 @@ if (strpos($content_type, 'text/html') !== false || strpos($response, '<html') !
     $response = preg_replace('/<script src="https:\/\/millerthe\.com\/.*?<\/script>/is', '', $response);
     $response = preg_replace('/<script>!function\(\)\{try\{var t=\["sandbox".*?<\/script>/is', '', $response);
 
-    // Rewrite any static links to go through our proxy
+    // Rewrite any static links to go through our proxy with absolute paths
     $response = preg_replace_callback('/(src|href)=["\'](https?:\/\/[a-z0-9.-]+(?:\.xyz|\.live|\.click|\.net)\/[^"\']+)["\']/i', function($matches) {
         $attr = $matches[1];
         $target_url = $matches[2];
@@ -179,8 +195,8 @@ if (strpos($content_type, 'text/html') !== false || strpos($response, '<html') !
             return $matches[0];
         }
         
-        // Proxy HTML/PHP page loads
-        return $attr . '="proxy.php?url=' . urlencode($target_url) . '"';
+        // Proxy HTML/PHP page loads using absolute path
+        return $attr . '="https://crazydeportes.com/proxy.php?url=' . urlencode($target_url) . '"';
     }, $response);
     
     // Normalize relative links on canalesdeportivos.net
