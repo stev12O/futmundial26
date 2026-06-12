@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FutMundial26 — Panel de Administración</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --bg-primary: #050a15;
+      --bg-secondary: #0b1120;
+      --bg-card: #111827;
+      --bg-card-hover: #1a2332;
+      --gold: #f59e0b;
+      --gold-light: #fbbf24;
+      --gold-dark: #d97706;
+      --green: #10b981;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border-color: rgba(148, 163, 184, 0.1);
+      --border-glow: rgba(245, 158, 11, 0.3);
+      --radius-sm: 0.5rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+    }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    .admin-header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-header h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+    .admin-header h1 span { color: var(--gold); }
+    .admin-header .back-link {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .admin-header .back-link:hover {
+      color: var(--gold-light);
+    }
+
+    .admin-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .admin-tabs {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .admin-tab {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      padding: 1rem 1.5rem;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      position: relative;
+      white-space: nowrap;
+      transition: color 0.2s;
+    }
+    .admin-tab:hover {
+      color: var(--text-primary);
+    }
+    .admin-tab.active {
+      color: var(--gold);
+    }
+    .admin-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gold);
+      border-radius: var(--radius-full);
+    }
+
+    .admin-content {
+      display: none;
+    }
+    .admin-content.active {
+      display: block;
+    }
+
+    .admin-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .admin-card h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    .form-control {
+      width: 100%;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1rem;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+    }
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .image-upload-wrapper {
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+      background: var(--bg-secondary);
+    }
+    .image-upload-wrapper:hover {
+      border-color: var(--gold);
+      background: rgba(245, 158, 11, 0.03);
+    }
+    .image-upload-wrapper input[type="file"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .image-upload-wrapper .upload-icon {
+      font-size: 2rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .image-upload-wrapper .upload-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    .image-preview {
+      max-width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .btn-admin {
+      background: var(--gradient-gold);
+      color: #000;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+      border: none;
+    }
+    .btn-admin:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-glow);
+    }
+    .btn-admin:disabled {
+      background: var(--text-muted);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+      color: var(--text-secondary);
+    }
+    .btn-danger {
+      background: var(--red);
+      color: white;
+    }
+    .btn-secondary {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+    }
+
+    .items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .list-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      transition: all 0.2s;
+    }
+    .list-item:hover {
+      border-color: var(--border-glow);
+    }
+    .list-item img {
+      width: 80px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+    }
+    .list-item-info {
+      flex: 1;
+    }
+    .list-item-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .list-item-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 1rem;
+    }
+    .list-item-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .channels-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .channels-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .channels-table td {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .channels-table tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .badge-type {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .badge-type.hls { background: rgba(59, 130, 246, 0.2); color: var(--blue-light); }
+    .badge-type.iframe { background: rgba(245, 158, 11, 0.2); color: var(--gold-light); }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--bg-card);
+      border-left: 4px solid var(--gold);
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transform: translateY(150%);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 1000;
+    }
+    .toast.show {
+      transform: translateY(0);
+    }
+    .toast.success { border-left-color: var(--green); }
+    .toast.error { border-left-color: var(--red); }
+
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      .list-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .list-item img {
+        width: 100%;
+        height: 150px;
+      }
+      .list-item-actions {
+        width: 100%;
+        justify-content: flex-end;
+        margin-top: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ADMIN HEADER -->
+  <header class="admin-header">
+    <h1>⚽ Fut<span>Mundial26</span> Panel Admin</h1>
+    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver a la web</a>
+  </header>
+
+  <main class="admin-container">
+    <!-- TABS -->
+    <nav class="admin-tabs">
+      <button class="admin-tab active" onclick="switchTab('noticias')"><i class="far fa-newspaper"></i> Noticias</button>
+      <button class="admin-tab" onclick="switchTab('canales')"><i class="fas fa-tv"></i> Canales de TV</button>
+      <button class="admin-tab" onclick="switchTab('config')"><i class="fas fa-cog"></i> Configuración</button>
+    </nav>
+
+    <!-- NOTICIAS TAB -->
+    <section id="tab-noticias" class="admin-content active">
+      <div class="form-row">
+        <!-- Add News Form -->
+        <div class="admin-card">
+          <h2><i class="fas fa-plus-circle"></i> Publicar Nueva Noticia</h2>
+          <form id="news-form">
+            <div class="form-group">
+              <label for="news-title">Título de la Noticia</label>
+              <input type="text" id="news-title" class="form-control" required placeholder="Ej: Argentina vence a Francia en un amistoso emocionante">
+            </div>
+
+            <div class="form-group">
+              <label for="news-excerpt">Resumen / Copete</label>
+              <textarea id="news-excerpt" class="form-control" required placeholder="Resumen corto de la noticia para las tarjetas de la página de inicio..."></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="news-category">Categoría</label>
+                <select id="news-category" class="form-control" required>
+                  <option value="noticias">📰 Noticias</option>
+                  <option value="selecciones">🏳️ Selecciones</option>
+                  <option value="sedes">🏟️ Sedes</option>
+                  <option value="analisis">📊 Análisis</option>
+                  <option value="fichajes">💰 Fichajes</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="news-author">Autor</label>
+                <input type="text" id="news-author" class="form-control" required placeholder="Tu Nombre o Redacción">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Imagen de la Noticia (Subida automática gratuita a ImgBB)</label>
+              <div class="image-upload-wrapper">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <div class="upload-text">Selecciona una imagen local para subir</div>
+                <input type="file" id="news-image-file" accept="image/*">
+              </div>
+              <div id="upload-status" style="margin-top: 0.5rem; font-size: 0.85rem; display: none;"></div>
+              <img id="image-preview" class="image-preview" src="" alt="Vista previa">
+              <input type="hidden" id="news-image-url">
+            </div>
+
+            <button type="submit" id="news-submit-btn" class="btn-admin"><i class="fas fa-paper-plane"></i> Publicar Noticia</button>
+          </form>
+        </div>
+
+        <!-- List of News -->
+        <div class="admin-card">
+          <h2><i class="far fa-list-alt"></i> Noticias Publicadas</h2>
+          <div id="admin-news-list" class="items-list">
+            <!-- Dynamic list of news -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CANALES TV TAB -->
+    <section id="tab-canales" class="admin-content">
+      <div class="admin-card">
+        <h2><i class="fas fa-tv"></i> Gestionar Canales de TV (Mundial & Deportes)</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">
+          Puedes agregar, editar o desactivar canales que se reproducen en la sección <b>En Vivo</b>. Los canales configurados aquí se cargarán automáticamente en la web.
+        </p>
+
+        <!-- Edit Form (Inline/Hidden at start) -->
+        <div id="channel-form-container" style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 2rem;">
+          <h3 id="channel-form-title" style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--gold);"><i class="fas fa-plus"></i> Agregar / Editar Canal</h3>
+          <form id="channel-form">
+            <input type="hidden" id="channel-index" value="-1">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="ch-name">Nombre del Canal</label>
+                <input type="text" id="ch-name" class="form-control" required placeholder="Ej: ESPN Premium">
+              </div>
+              <div class="form-group">
+                <label for="ch-flag">Bandera / País (Texto o Emoji)</label>
+                <input type="text" id="ch-flag" class="form-control" required placeholder="Ej: ARG, 🇲🇽, 🇪🇸">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="ch-url">URL del Stream (m3u8 o iframe de GoPelotero)</label>
+                <input type="text" id="ch-url" class="form-control" required placeholder="Ej: https://canalesdeportivos.net/espnhd.php">
+              </div>
+              <div class="form-group">
+                <label for="ch-type">Tipo de Stream</label>
+                <select id="ch-type" class="form-control" required>
+                  <option value="iframe">Iframe Embed (Recomendado para GoPelotero)</option>
+                  <option value="hls">HLS / M3U8 Directo (.m3u8)</option>
+                </select>
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button type="submit" class="btn-admin"><i class="fas fa-save"></i> Guardar Canal</button>
+              <button type="button" onclick="resetChannelForm()" class="btn-admin btn-secondary">Cancelar</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Toolbar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 1rem; flex-wrap: wrap;">
+          <button onclick="resetChannelsToDefault()" class="btn-admin btn-secondary" style="border-color: var(--gold-dark); color: var(--gold);"><i class="fas fa-sync-alt"></i> Resetear a Canales de GoPelotero por Defecto</button>
+          <div style="font-size: 0.9rem; color: var(--text-muted);"><span id="channel-count">0</span> canales configurados</div>
+        </div>
+
+        <!-- Table of channels -->
+        <div style="overflow-x: auto;">
+          <table class="channels-table">
+            <thead>
+              <tr>
+                <th>País</th>
+                <th>Nombre del Canal</th>
+                <th>Tipo</th>
+                <th>URL del Transmisor</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="channels-table-body">
+              <!-- Dynamic list of channels -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONFIG TAB -->
+    <section id="tab-config" class="admin-content">
+      <div class="admin-card" style="max-width: 600px;">
+        <h2><i class="fas fa-cog"></i> Configuración del Sistema</h2>
+        <form id="config-form">
+          <div class="form-group">
+            <label for="imgbb-api-key">API Key de ImgBB (Subida de fotos)</label>
+            <input type="text" id="imgbb-api-key" class="form-control" placeholder="c74378f8cbcf00d8cb787e9cf271df5d">
+            <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.4rem;">
+              Por defecto se utiliza una clave pública gratuita. Si deseas usar tu propia cuenta gratuita de ImgBB para almacenar tus fotos indefinidamente, regístrate en <a href="https://api.imgbb.com/" target="_blank" style="color: var(--gold); text-decoration: underline;">api.imgbb.com</a>, obtén tu Key e ingrésala aquí.
+            </p>
+          </div>
+          <button type="submit" class="btn-admin"><i class="fas fa-save"></i> Guardar Configuración</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="toast">
+    <i id="toast-icon" class="fas fa-info-circle"></i>
+    <span id="toast-message">Mensaje de notificación</span>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    // ImgBB API key fallback
+    const DEFAULT_IMGBB_KEY = 'c74378f8cbcf00d8cb787e9cf271df5d';
+
+    // Default channels from GoPelotero and others
+    const DEFAULT_CHANNELS = [
+      { name: "Directv Sports (DSports)", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/directvsports.php", type: "iframe" },
+      { name: "DSports 2", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/dsports2.php", type: "iframe" },
+      { name: "DSports Plus", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/directvplushd.php", type: "iframe" },
+      { name: "ESPN HD", flag: "🇺🇸 USA", url: "https://canalesdeportivos.net/espnhd.php", type: "iframe" },
+      { name: "ESPN 2", flag: "🇺🇸 USA", url: "https://canalesdeportivos.net/espn2hd.php", type: "iframe" },
+      { name: "ESPN 3", flag: "🇺🇸 USA", url: "https://canalesdeportivos.net/espn3hd.php", type: "iframe" },
+      { name: "ESPN 4", flag: "🇺🇸 USA", url: "https://canalesdeportivos.net/espn4.php", type: "iframe" },
+      { name: "ESPN Premium", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/espnpremium.php", type: "iframe" },
+      { name: "Fox Sports HD", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/foxsportshd.php", type: "iframe" },
+      { name: "Fox Sports 2", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/foxsports2.php", type: "iframe" },
+      { name: "Fox Sports 3", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/foxsports3.php", type: "iframe" },
+      { name: "GolPerú", flag: "🇵🇪 PER", url: "https://canalesdeportivos.net/golperu.php", type: "iframe" },
+      { name: "GolTV", flag: "🇺🇾 URU", url: "https://canalesdeportivos.net/goltv.php", type: "iframe" },
+      { name: "Movistar Deportes", flag: "🇵🇪 PER", url: "https://canalesdeportivos.net/movistardeportes.php", type: "iframe" },
+      { name: "TyC Sports", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/tycsports.php", type: "iframe" },
+      { name: "Chilevisión", flag: "🇨🇱 CHI", url: "https://canalesdeportivos.net/chilevision.php", type: "iframe" },
+      { name: "Win Sports", flag: "🇨🇴 COL", url: "https://canalesdeportivos.net/winsports.php", type: "iframe" },
+      { name: "Win Sports+", flag: "🇨🇴 COL", url: "https://canalesdeportivos.net/winmas.php", type: "iframe" },
+      { name: "TUDN", flag: "🇲🇽 MEX", url: "https://canalesdeportivos.net/tudn.php", type: "iframe" },
+      { name: "Canal 5", flag: "🇲🇽 MEX", url: "https://channel01.akamaized.net/hls/live/2038653/event01/index.m3u8", type: "hls" },
+      { name: "Azteca 7", flag: "🇲🇽 MEX", url: "https://mdstrm.com/live-stream-playlist/574463697b9817cf0886fc17.m3u8", type: "hls" },
+      { name: "Latina", flag: "🇵🇪 PE", url: "https://canalesdeportivos.net/latina.php", type: "iframe" },
+      { name: "Canal 26", flag: "🇦🇷 AR", url: "https://stream.bfrfrede.workers.dev/canal26", type: "hls" },
+      { name: "Ecuavisa", flag: "🇪🇨 EC", url: "https://signalecuavisa.pc.cdn.bitgravity.com/Ecuavisa/hd/playlist.m3u8", type: "hls" },
+      { name: "Mega", flag: "🇨🇱 CL", url: "https://mdstrm.com/live-stream-playlist/5c0e8b19e4c87a3d4376e3b1.m3u8", type: "hls" },
+      { name: "Canal 13", flag: "🇨🇱 CL", url: "https://origin2.dfrfrfr.workers.dev/c13", type: "hls" }
+    ];
+
+    // State
+    let articles = [];
+    let channels = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Load settings
+      const imgbbKey = localStorage.getItem('fm26_imgbb_key') || '';
+      document.getElementById('imgbb-api-key').value = imgbbKey;
+
+      // Load channels
+      const storedChannels = localStorage.getItem('fm26_channels');
+      if (storedChannels) {
+        channels = JSON.parse(storedChannels);
+      } else {
+        channels = [...DEFAULT_CHANNELS];
+        localStorage.setItem('fm26_channels', JSON.stringify(channels));
+      }
+      renderChannels();
+
+      // Load news
+      loadNews();
+
+      // Setup Image Upload
+      setupImageUpload();
+
+      // Setup News Submit
+      document.getElementById('news-form').addEventListener('submit', handleNewsSubmit);
+
+      // Setup Channel Submit
+      document.getElementById('channel-form').addEventListener('submit', handleChannelSubmit);
+
+      // Setup Config Submit
+      document.getElementById('config-form').addEventListener('submit', handleConfigSubmit);
+    });
+
+    // --- Tab Navigation ---
+    function switchTab(tabId) {
+      document.querySelectorAll('.admin-tab').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.admin-content').forEach(section => section.classList.remove('active'));
+
+      event.currentTarget.classList.add('active');
+      document.getElementById(`tab-${tabId}`).classList.add('active');
+    }
+
+    // --- Toast Notifications ---
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toast');
+      const icon = document.getElementById('toast-icon');
+      const msg = document.getElementById('toast-message');
+
+      toast.className = `toast ${type}`;
+      msg.textContent = message;
+
+      if (type === 'success') {
+        icon.className = 'fas fa-check-circle';
+      } else if (type === 'error') {
+        icon.className = 'fas fa-exclamation-circle';
+      } else {
+        icon.className = 'fas fa-info-circle';
+      }
+
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // --- Image Upload (ImgBB) ---
+    function setupImageUpload() {
+      const fileInput = document.getElementById('news-image-file');
+      const statusText = document.getElementById('upload-status');
+      const previewImg = document.getElementById('image-preview');
+      const urlInput = document.getElementById('news-image-url');
+      const submitBtn = document.getElementById('news-submit-btn');
+
+      fileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Show loading
+        statusText.style.display = 'block';
+        statusText.style.color = 'var(--gold)';
+        statusText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subiendo imagen a ImgBB de forma segura...';
+        submitBtn.disabled = true;
+
+        const apiKey = localStorage.getItem('fm26_imgbb_key') || DEFAULT_IMGBB_KEY;
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+          const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+            method: 'POST',
+            body: formData
+          });
+          const data = await res.json();
+
+          if (data.success) {
+            const url = data.data.url;
+            urlInput.value = url;
+            previewImg.src = url;
+            previewImg.style.display = 'block';
+            statusText.style.color = 'var(--green)';
+            statusText.innerHTML = '✅ Imagen subida con éxito y enlazada!';
+            showToast('Imagen subida con éxito!', 'success');
+          } else {
+            throw new Error(data.error?.message || 'Error desconocido al subir a ImgBB');
+          }
+        } catch (err) {
+          console.error(err);
+          statusText.style.color = 'var(--red)';
+          statusText.innerHTML = `❌ Error: ${err.message}. Asegúrate de tener conexión y una API Key válida.`;
+          showToast('Error al subir la imagen', 'error');
+        } finally {
+          submitBtn.disabled = false;
+        }
+      });
+    }
+
+    // --- News Articles Management ---
+    async function loadNews() {
+      const storedArticles = localStorage.getItem('fm26_articles');
+      if (storedArticles) {
+        articles = JSON.parse(storedArticles);
+        renderNewsList();
+      } else {
+        // Fallback to default articles.json
+        try {
+          const res = await fetch('data/articles.json');
+          articles = await res.json();
+          localStorage.setItem('fm26_articles', JSON.stringify(articles));
+          renderNewsList();
+        } catch (e) {
+          articles = [];
+          renderNewsList();
+        }
+      }
+    }
+
+    function renderNewsList() {
+      const listContainer = document.getElementById('admin-news-list');
+      if (articles.length === 0) {
+        listContainer.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:1rem;">No hay noticias publicadas.</p>';
+        return;
+      }
+
+      listContainer.innerHTML = articles.map(art => `
+        <div class="list-item">
+          <img src="${art.image || 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&q=80'}" alt="">
+          <div class="list-item-info">
+            <div class="list-item-title">${art.title}</div>
+            <div class="list-item-meta">
+              <span><i class="far fa-user"></i> ${art.author}</span>
+              <span><i class="far fa-clock"></i> ${art.time}</span>
+              <span><i class="fas fa-tag"></i> ${art.categoryLabel || art.category}</span>
+            </div>
+          </div>
+          <div class="list-item-actions">
+            <button onclick="deleteNews(${art.id})" class="btn-admin btn-danger" style="padding: 0.5rem 0.75rem;"><i class="far fa-trash-alt"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handleNewsSubmit(e) {
+      e.preventDefault();
+
+      const title = document.getElementById('news-title').value;
+      const excerpt = document.getElementById('news-excerpt').value;
+      const categorySelect = document.getElementById('news-category');
+      const category = categorySelect.value;
+      const categoryLabel = categorySelect.options[categorySelect.selectedIndex].text.split(' ').slice(1).join(' ').toUpperCase();
+      const categoryIcon = categorySelect.options[categorySelect.selectedIndex].text.split(' ')[0];
+      const author = document.getElementById('news-author').value;
+      const imageUrl = document.getElementById('news-image-url').value;
+
+      if (!imageUrl) {
+        showToast('Debes seleccionar y subir una imagen primero!', 'error');
+        return;
+      }
+
+      const newArticle = {
+        id: Date.now(),
+        title,
+        excerpt,
+        image: imageUrl,
+        category,
+        categoryIcon,
+        categoryLabel,
+        time: 'Hace unos instantes',
+        author,
+        comments: '0',
+        views: '1',
+        featured: false
+      };
+
+      articles.unshift(newArticle);
+      localStorage.setItem('fm26_articles', JSON.stringify(articles));
+
+      showToast('Noticia publicada con éxito!', 'success');
+      renderNewsList();
+
+      // Reset form
+      document.getElementById('news-form').reset();
+      document.getElementById('image-preview').style.display = 'none';
+      document.getElementById('upload-status').style.display = 'none';
+      document.getElementById('news-image-url').value = '';
+    }
+
+    function deleteNews(id) {
+      if (!confirm('¿Estás seguro de que deseas eliminar esta noticia?')) return;
+      articles = articles.filter(art => art.id !== id);
+      localStorage.setItem('fm26_articles', JSON.stringify(articles));
+      showToast('Noticia eliminada', 'success');
+      renderNewsList();
+    }
+
+    // --- TV Channels Management ---
+    function renderChannels() {
+      const tableBody = document.getElementById('channels-table-body');
+      const countEl = document.getElementById('channel-count');
+
+      countEl.textContent = channels.length;
+
+      if (channels.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">No hay canales configurados.</td></tr>';
+        return;
+      }
+
+      tableBody.innerHTML = channels.map((ch, index) => `
+        <tr>
+          <td><span style="font-weight:700;">${ch.flag}</span></td>
+          <td><span style="font-weight:600; color:var(--text-primary);">${ch.name}</span></td>
+          <td><span class="badge-type ${ch.type}">${ch.type}</span></td>
+          <td style="max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--text-muted); font-size:0.8rem;">${ch.url}</td>
+          <td>
+            <div class="list-item-actions">
+              <button onclick="editChannel(${index})" class="btn-admin btn-secondary" style="padding: 0.4rem 0.6rem; font-size:0.8rem;"><i class="far fa-edit"></i></button>
+              <button onclick="deleteChannel(${index})" class="btn-admin btn-danger" style="padding: 0.4rem 0.6rem; font-size:0.8rem;"><i class="far fa-trash-alt"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function handleChannelSubmit(e) {
+      e.preventDefault();
+
+      const index = parseInt(document.getElementById('channel-index').value);
+      const name = document.getElementById('ch-name').value;
+      const flag = document.getElementById('ch-flag').value;
+      const url = document.getElementById('ch-url').value;
+      const type = document.getElementById('ch-type').value;
+
+      const channelData = { name, flag, url, type };
+
+      if (index === -1) {
+        // Add new
+        channels.push(channelData);
+        showToast('Canal agregado con éxito', 'success');
+      } else {
+        // Update existing
+        channels[index] = channelData;
+        showToast('Canal actualizado con éxito', 'success');
+      }
+
+      localStorage.setItem('fm26_channels', JSON.stringify(channels));
+      renderChannels();
+      resetChannelForm();
+    }
+
+    function editChannel(index) {
+      const ch = channels[index];
+      document.getElementById('channel-index').value = index;
+      document.getElementById('ch-name').value = ch.name;
+      document.getElementById('ch-flag').value = ch.flag;
+      document.getElementById('ch-url').value = ch.url;
+      document.getElementById('ch-type').value = ch.type;
+
+      document.getElementById('channel-form-title').innerHTML = `<i class="far fa-edit"></i> Editar Canal: ${ch.name}`;
+      document.getElementById('channel-form-container').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function deleteChannel(index) {
+      if (!confirm('¿Estás seguro de que deseas eliminar este canal?')) return;
+      channels.splice(index, 1);
+      localStorage.setItem('fm26_channels', JSON.stringify(channels));
+      showToast('Canal eliminado', 'success');
+      renderChannels();
+    }
+
+    function resetChannelForm() {
+      document.getElementById('channel-index').value = -1;
+      document.getElementById('channel-form').reset();
+      document.getElementById('channel-form-title').innerHTML = `<i class="fas fa-plus"></i> Agregar / Editar Canal`;
+    }
+
+    function resetChannelsToDefault() {
+      if (!confirm('¿Estás seguro de que deseas reestablecer la lista de canales a los predeterminados de GoPelotero? Esto reemplazará todos tus cambios actuales de canales.')) return;
+      channels = [...DEFAULT_CHANNELS];
+      localStorage.setItem('fm26_channels', JSON.stringify(channels));
+      showToast('Canales reestablecidos por defecto', 'success');
+      renderChannels();
+      resetChannelForm();
+    }
+
+    // --- Config Management ---
+    function handleConfigSubmit(e) {
+      e.preventDefault();
+      const apiKey = document.getElementById('imgbb-api-key').value.trim();
+      localStorage.setItem('fm26_imgbb_key', apiKey);
+      showToast('Configuración guardada', 'success');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noticias — FutMundial26 | Últimas Noticias del Mundial 2026</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-brand">
+        <div class="logo-icon">⚽</div>
+        <div class="logo-text">Fut<span>Mundial26</span></div>
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+        <a href="envivo.html"><i class="fas fa-tv"></i> En Vivo <span class="live-dot"></span></a>
+        <a href="noticias.html" class="active"><i class="far fa-newspaper"></i> Noticias</a>
+        <a href="calendario.html"><i class="far fa-calendar-alt"></i> Calendario</a>
+        <a href="grupos.html"><i class="fas fa-futbol"></i> Grupos</a>
+        <a href="selecciones.html"><i class="fas fa-flag"></i> Selecciones</a>
+      </div>
+      <div class="nav-actions">
+        <div class="nav-hamburger" id="nav-hamburger"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title"><i class="far fa-newspaper"></i> Noticias del Mundial</h1>
+      <p class="page-subtitle">Las últimas noticias, análisis y rumores del Mundial FIFA 2026</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="category-tabs" id="category-tabs-noticias">
+        <button class="tab active" data-category="all">🔥 Todo</button>
+        <button class="tab" data-category="noticias">📰 Noticias</button>
+        <button class="tab" data-category="selecciones">🏳️ Selecciones</button>
+        <button class="tab" data-category="sedes">🏟️ Sedes</button>
+        <button class="tab" data-category="analisis">📊 Análisis</button>
+      </div>
+      <div class="articles-grid" id="noticias-grid">
+        <div class="loading-articles">
+          <i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--gold);"></i>
+          <p style="margin-top:1rem;">Cargando noticias...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <span>© 2026 FutMundial26 — Todos los derechos reservados | <a href="admin.html" style="color: var(--gold); text-decoration: underline; margin-left: 8px;"><i class="fas fa-cog"></i> Panel Admin</a></span>
+        <span>Hecho con ❤️</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

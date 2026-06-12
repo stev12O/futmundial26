@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendario — FutMundial26 | Partidos del Mundial 2026</title>
+  <meta name="description" content="Calendario completo del Mundial 2026 con horarios locales por país.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .cal-filters { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1.5rem; }
+    .cal-filters .tab { padding:8px 20px; border-radius:var(--radius-full); font-size:0.85rem; font-weight:600; background:var(--bg-card); border:1px solid var(--border-color); color:var(--text-secondary); cursor:pointer; transition:all 0.2s; }
+    .cal-filters .tab.active, .cal-filters .tab:hover { background:var(--gold); color:#000; border-color:var(--gold); }
+    .tz-bar { background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-lg); padding:1.5rem; margin-bottom:1.5rem; display:flex; flex-wrap:wrap; align-items:center; gap:1rem; }
+    .tz-bar label { color:var(--gold); font-weight:700; }
+    .tz-bar select { background:var(--bg-secondary); color:var(--text-primary); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:0.6rem 1rem; font-size:0.9rem; }
+    .tz-detected { color:var(--green); font-size:0.85rem; }
+    .match-day { background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-lg); margin-bottom:1.5rem; overflow:hidden; }
+    .match-day-header { display:flex; justify-content:space-between; align-items:center; padding:1rem 1.5rem; background:linear-gradient(135deg,rgba(245,158,11,0.1),transparent); border-bottom:1px solid var(--border-color); }
+    .match-day-header h3 { font-family:var(--font-display); font-size:1rem; color:var(--gold); }
+    .match-day-header .phase { font-size:0.85rem; color:var(--green); font-weight:600; }
+    .match-entry { display:flex; align-items:center; padding:1rem 1.5rem; border-bottom:1px solid var(--border-color); gap:1rem; }
+    .match-entry:last-child { border-bottom:none; }
+    .match-entry .me-teams { flex:1; display:flex; align-items:center; gap:0.5rem; font-weight:600; }
+    .match-entry .me-time { color:var(--gold); font-family:var(--font-display); font-size:1.2rem; font-weight:800; min-width:60px; text-align:center; }
+    .match-entry .me-score { font-family:var(--font-display); font-size:1.1rem; font-weight:800; color:var(--text-primary); min-width:60px; text-align:center; }
+    .match-entry .me-venue { font-size:0.75rem; color:var(--text-muted); text-align:right; min-width:150px; }
+    .tz-chips { display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; }
+    .tz-chip { font-size:0.65rem; padding:2px 6px; border-radius:var(--radius-sm); background:var(--bg-secondary); border:1px solid var(--border-color); color:var(--text-muted); }
+    .tz-chip.highlight { border-color:var(--gold); color:var(--gold); background:rgba(245,158,11,0.1); }
+    .group-filter select { background:var(--bg-card); color:var(--text-primary); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:0.5rem 1rem; }
+    @media(max-width:768px) {
+      .match-entry { flex-direction:column; align-items:flex-start; gap:0.5rem; }
+      .match-entry .me-venue { text-align:left; }
+      .tz-bar { flex-direction:column; align-items:flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-brand">
+        <div class="logo-icon">⚽</div>
+        <div class="logo-text">Fut<span>Mundial26</span></div>
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+        <a href="envivo.html"><i class="fas fa-tv"></i> En Vivo <span class="live-dot"></span></a>
+        <a href="noticias.html"><i class="far fa-newspaper"></i> Noticias</a>
+        <a href="calendario.html" class="active"><i class="far fa-calendar-alt"></i> Calendario</a>
+        <a href="grupos.html"><i class="fas fa-futbol"></i> Grupos</a>
+        <a href="selecciones.html"><i class="fas fa-flag"></i> Selecciones</a>
+      </div>
+      <div class="nav-actions">
+        <div class="nav-hamburger" id="nav-hamburger"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title">🗓️ Calendario del Mundial 2026</h1>
+      <p class="page-subtitle">Los 104 partidos del torneo más grande de la historia — Fase de Grupos, Octavos, Cuartos, Semifinales y Final</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <!-- Phase filters -->
+      <div class="cal-filters">
+        <button class="tab active">🏅 Fase de Grupos</button>
+        <button class="tab">🥈 Octavos de Final</button>
+        <button class="tab">🥇 Cuartos de Final</button>
+        <button class="tab">🏆 Semifinales</button>
+        <button class="tab">🏆 Final</button>
+      </div>
+
+      <!-- Timezone Bar -->
+      <div class="tz-bar">
+        <label>🕐 Tu zona horaria:</label>
+        <select id="tz-select">
+          <option value="-6">🇲🇽 México (CDMX) — UTC-6</option>
+          <option value="-5">🇨🇴 Colombia — UTC-5</option>
+          <option value="-5">🇵🇪 Perú — UTC-5</option>
+          <option value="-5">🇪🇨 Ecuador — UTC-5</option>
+          <option value="-4">🇻🇪 Venezuela — UTC-4</option>
+          <option value="-4">🇧🇴 Bolivia — UTC-4</option>
+          <option value="-4">🇺🇸 USA (Este) — UTC-4</option>
+          <option value="-5">🇺🇸 USA (Centro) — UTC-5</option>
+          <option value="-7">🇺🇸 USA (Montaña) — UTC-7</option>
+          <option value="-7">🇺🇸 USA (Pacífico) — UTC-7</option>
+          <option value="-3">🇦🇷 Argentina — UTC-3</option>
+          <option value="-3">🇺🇾 Uruguay — UTC-3</option>
+          <option value="-3">🇧🇷 Brasil — UTC-3</option>
+          <option value="-4">🇨🇱 Chile — UTC-4</option>
+          <option value="-4">🇵🇾 Paraguay — UTC-4</option>
+          <option value="-6">🇨🇷 Costa Rica — UTC-6</option>
+          <option value="-5">🇵🇦 Panamá — UTC-5</option>
+          <option value="-6">🇭🇳 Honduras — UTC-6</option>
+          <option value="-6">🇸🇻 El Salvador — UTC-6</option>
+          <option value="-6">🇬🇹 Guatemala — UTC-6</option>
+          <option value="+2">🇪🇸 España — UTC+2</option>
+        </select>
+        <span class="tz-detected" id="tz-detected">✅ Detectado: <span id="tz-city"></span></span>
+      </div>
+
+      <!-- Group filter -->
+      <div class="group-filter" style="margin-bottom:1.5rem;">
+        <select id="group-filter-select">
+          <option value="all">Todos los grupos</option>
+          <option value="A">Grupo A</option><option value="B">Grupo B</option>
+          <option value="C">Grupo C</option><option value="D">Grupo D</option>
+        </select>
+      </div>
+
+      <!-- Match Days -->
+      <div id="match-days">
+        <!-- Jornada 1 -->
+        <div class="match-day">
+          <div class="match-day-header">
+            <h3>📅 Jornada 1 — Jueves 11 de Junio, 2026</h3>
+            <span class="phase">🎆 Inauguración</span>
+          </div>
+          <div class="match-entry" data-utc="2026-06-11T23:00:00Z">
+            <div class="me-teams">🇲🇽 México</div>
+            <div class="me-time">17:00</div>
+            <div class="me-score">TBD</div>
+            <div class="me-venue">🏟️ Estadio Azteca<br>Grupo B · CDMX</div>
+          </div>
+        </div>
+
+        <!-- Jornada 2 -->
+        <div class="match-day">
+          <div class="match-day-header">
+            <h3>📅 Viernes 12 de Junio, 2026</h3>
+            <span class="phase">Grupo A, B</span>
+          </div>
+          <div class="match-entry" data-utc="2026-06-12T18:00:00Z">
+            <div class="me-teams">🇦🇷 Argentina vs 🇨🇦 Canadá</div>
+            <div class="me-time">12:00</div>
+            <div class="me-score">TBD</div>
+            <div class="me-venue">🏟️ Hard Rock Stadium<br>Grupo A · Miami</div>
+          </div>
+          <div class="match-entry" data-utc="2026-06-12T21:00:00Z">
+            <div class="me-teams">🇫🇷 Francia vs 🇩🇰 Dinamarca</div>
+            <div class="me-time">15:00</div>
+            <div class="me-score">TBD</div>
+            <div class="me-venue">🏟️ MetLife Stadium<br>Grupo B · NJ</div>
+          </div>
+          <div class="match-entry" data-utc="2026-06-13T00:00:00Z">
+            <div class="me-teams">🇧🇷 Brasil vs 🇷🇸 Serbia</div>
+            <div class="me-time">18:00</div>
+            <div class="me-score">TBD</div>
+            <div class="me-venue">🏟️ SoFi Stadium<br>Grupo C · LA</div>
+          </div>
+        </div>
+
+        <!-- Jornada 3 -->
+        <div class="match-day">
+          <div class="match-day-header">
+            <h3>📅 Sábado 13 de Junio, 2026</h3>
+            <span class="phase">Grupo C, D</span>
+          </div>
+          <div class="match-entry" data-utc="2026-06-13T18:00:00Z">
+            <div class="me-teams">🇪🇸 España vs 🇨🇷 Costa Rica</div>
+            <div class="me-time">12:00</div>
+            <div class="me-score">TBD</div>
+            <div class="me-venue">🏟️ AT&T Stadium<br>Grupo C · Dallas</div>
+          </div>
+          <div class="match-entry" data-utc="2026-06-13T21:00:00Z">
+            <div class="me-teams">🇩🇪 Alemania vs 🇯🇵 Japón</div>
+            <div class="me-time">15:00</div>
+            <div class="me-score">TBD</div>
+            <div class="me-venue">🏟️ NRG Stadium<br>Grupo D · Houston</div>
+          </div>
+          <div class="match-entry" data-utc="2026-06-14T00:00:00Z">
+            <div class="me-teams">🇬🇧 Inglaterra vs 🇮🇷 Irán</div>
+            <div class="me-time">18:00</div>
+            <div class="me-score">TBD</div>
+            <div class="me-venue">🏟️ Lincoln Financial<br>Grupo D · Filadelfia</div>
+          </div>
+        </div>
+
+        <!-- Jornada 4 -->
+        <div class="match-day">
+          <div class="match-day-header">
+            <h3>📅 Domingo 14 de Junio, 2026</h3>
+            <span class="phase">Grupo A, B</span>
+          </div>
+          <div class="match-entry" data-utc="2026-06-14T18:00:00Z">
+            <div class="me-teams">🇺🇸 USA vs 🇸🇳 Senegal</div>
+            <div class="me-time">12:00</div>
+            <div class="me-score">TBD</div>
+            <div class="me-venue">🏟️ Mercedes-Benz<br>Grupo A · Atlanta</div>
+          </div>
+          <div class="match-entry" data-utc="2026-06-14T21:00:00Z">
+            <div class="me-teams">🇨🇴 Colombia vs 🇪🇨 Ecuador</div>
+            <div class="me-time">15:00</div>
+            <div class="me-score">TBD</div>
+            <div class="me-venue">🏟️ Levi's Stadium<br>Grupo B · SF</div>
+          </div>
+        </div>
+
+        <!-- Jornada 5 -->
+        <div class="match-day">
+          <div class="match-day-header">
+            <h3>📅 Lunes 15 de Junio, 2026</h3>
+            <span class="phase">Grupo C, D</span>
+          </div>
+          <div class="match-entry" data-utc="2026-06-15T18:00:00Z">
+            <div class="me-teams">🇵🇹 Portugal vs 🇺🇾 Uruguay</div>
+            <div class="me-time">12:00</div>
+            <div class="me-score">TBD</div>
+            <div class="me-venue">🏟️ Gillette Stadium<br>Grupo C · Boston</div>
+          </div>
+          <div class="match-entry" data-utc="2026-06-15T21:00:00Z">
+            <div class="me-teams">🇳🇱 Países Bajos vs 🇵🇱 Polonia</div>
+            <div class="me-time">15:00</div>
+            <div class="me-score">TBD</div>
+            <div class="me-venue">🏟️ BMO Field<br>Grupo D · Toronto</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <span>© 2026 FutMundial26 — Todos los derechos reservados | <a href="admin.html" style="color: var(--gold); text-decoration: underline; margin-left: 8px;"><i class="fas fa-cog"></i> Panel Admin</a></span>
+        <span>Hecho con ❤️ para los fans del fútbol</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>En Vivo — FutMundial26 | TV del Mundial 2026</title>
+  <meta name="description" content="Mira los partidos del Mundial 2026 en vivo. Canales gratuitos de TV en directo.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <style>
+    .envivo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; margin-top: 2rem; }
+    .ch-btn { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.5rem 1rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .ch-btn:hover, .ch-btn.active { border-color: var(--gold); box-shadow: var(--shadow-glow); }
+    .ch-btn .ch-flag { font-size: 1.2rem; font-weight: 700; color: var(--gold); margin-bottom: 0.3rem; }
+    .ch-btn .ch-name { font-size: 0.9rem; font-weight: 600; }
+    .ch-btn .ch-status { font-size: 0.7rem; color: var(--green); margin-top: 0.3rem; }
+    .vix-banner { background: linear-gradient(135deg, #1a0a2e, #2d1b69); border: 1px solid rgba(139,92,246,0.3); border-radius: var(--radius-xl); padding: 2rem; text-align: center; margin-top: 2rem; }
+    .vix-banner h3 { color: #a78bfa; font-family: var(--font-display); margin-bottom: 0.5rem; }
+    .vix-banner p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem; }
+    .vix-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; padding: 12px 28px; border-radius: var(--radius-full); font-weight: 700; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-brand">
+        <div class="logo-icon">⚽</div>
+        <div class="logo-text">Fut<span>Mundial26</span></div>
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+        <a href="envivo.html" class="active"><i class="fas fa-tv"></i> En Vivo <span class="live-dot"></span></a>
+        <a href="noticias.html"><i class="far fa-newspaper"></i> Noticias</a>
+        <a href="calendario.html"><i class="far fa-calendar-alt"></i> Calendario</a>
+        <a href="grupos.html"><i class="fas fa-futbol"></i> Grupos</a>
+        <a href="selecciones.html"><i class="fas fa-flag"></i> Selecciones</a>
+      </div>
+      <div class="nav-actions">
+        <div class="nav-hamburger" id="nav-hamburger">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title"><i class="fas fa-tv"></i> 🟡 En Vivo — TV del Mundial</h1>
+      <p class="page-subtitle">Selecciona un canal para ver la transmisión en vivo del Mundial FIFA 2026</p>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <section class="section">
+    <div class="container">
+      <!-- Player -->
+      <div class="live-section">
+        <div class="live-player-container" id="live-player-envivo">
+          <div class="player-placeholder">
+            <i class="fas fa-satellite-dish" style="font-size: 4rem;"></i>
+            <p style="font-size: 1.2rem; font-weight: 600;">Selecciona un canal para empezar</p>
+            <span style="color: var(--text-muted);">Haz clic en cualquier canal de abajo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Channel Grid -->
+      <div class="envivo-grid" id="envivo-channels">
+        <div class="ch-btn" data-url="https://stream.bfrfrede.workers.dev/canal26">
+          <div class="ch-flag">AR</div>
+          <div class="ch-name">Canal 26</div>
+          <div class="ch-status">● EN VIVO</div>
+        </div>
+        <div class="ch-btn" data-url="https://channel01.akamaized.net/hls/live/2038653/event01/index.m3u8">
+          <div class="ch-flag">MX</div>
+          <div class="ch-name">Canal 5</div>
+          <div class="ch-status">● EN VIVO</div>
+        </div>
+        <div class="ch-btn" data-url="https://mdstrm.com/live-stream-playlist/574463697b9817cf0886fc17.m3u8">
+          <div class="ch-flag">MX</div>
+          <div class="ch-name">Azteca 7</div>
+          <div class="ch-status">● EN VIVO</div>
+        </div>
+        <div class="ch-btn" data-url="https://jireh-3-hls-video-us-isp.dps.live/hls-video/567ffde3fa2b11b412fe5c5aab0b157231560022/latina/latina.smil/latina/livestream2.m3u8">
+          <div class="ch-flag">PE</div>
+          <div class="ch-name">Latina</div>
+          <div class="ch-status">● EN VIVO</div>
+        </div>
+        <div class="ch-btn" data-url="https://mdstrm.com/live-stream-playlist/5c0e8b19e4c87a3d4376e3b1.m3u8">
+          <div class="ch-flag">CL</div>
+          <div class="ch-name">Mega</div>
+          <div class="ch-status">● EN VIVO</div>
+        </div>
+        <div class="ch-btn" data-url="https://origin2.dfrfrfr.workers.dev/c13">
+          <div class="ch-flag">CL</div>
+          <div class="ch-name">Canal 13</div>
+          <div class="ch-status">● EN VIVO</div>
+        </div>
+        <div class="ch-btn" data-url="https://signalecuavisa.pc.cdn.bitgravity.com/Ecuavisa/hd/playlist.m3u8">
+          <div class="ch-flag">EC</div>
+          <div class="ch-name">Ecuavisa</div>
+          <div class="ch-status">● EN VIVO</div>
+        </div>
+        <div class="ch-btn" data-url="https://www.youtube.com/embed/live_stream?channel=UCQfwfsi5VrQ8yKZ-UWmAEFg&autoplay=1" data-type="iframe">
+          <div class="ch-flag">FR</div>
+          <div class="ch-name">France24</div>
+          <div class="ch-status">● EN VIVO</div>
+        </div>
+        <div class="ch-btn" data-url="https://dwamdstream104.akamaized.net/hls/live/2015530/dwstream104/index.m3u8">
+          <div class="ch-flag">DE</div>
+          <div class="ch-name">DW</div>
+          <div class="ch-status">● EN VIVO</div>
+        </div>
+        <div class="ch-btn" data-url="https://cdnesmain.telesur.net/HLS/tves-hd/index.m3u8">
+          <div class="ch-flag">VE</div>
+          <div class="ch-name">TeleSUR</div>
+          <div class="ch-status">● EN VIVO</div>
+        </div>
+      </div>
+
+      <!-- Vix Banner -->
+      <div class="vix-banner">
+        <h3>📺 ¿Tienes Vix Premium?</h3>
+        <p>Mira todos los partidos del Mundial 2026 en HD sin interrupciones con tu suscripción de Vix</p>
+        <a href="https://www.vix.com" target="_blank" class="vix-btn"><i class="fas fa-play-circle"></i> Ver en Vix Premium</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <span>© 2026 FutMundial26 — Todos los derechos reservados</span>
+        <span>Hecho con ❤️ para los fans del fútbol | <a href="admin.html" style="color: var(--gold); text-decoration: underline; margin-left: 8px;"><i class="fas fa-cog"></i> Panel Admin</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+[
+  {
+    "id": 1,
+    "title": "Argentina Llega Como Máxima Favorita al Mundial 2026: ¿Podrá el Bicampeón Lograr el Tricampeonato?",
+    "excerpt": "La selección argentina llega al Mundial 2026 como la gran favorita tras conquistar la Copa América 2024 y el Mundial 2022 en Qatar. Con Lionel Messi liderando por última vez, la albiceleste busca hacer historia.",
+    "image": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&q=80",
+    "category": "selecciones",
+    "categoryIcon": "🏳️",
+    "categoryLabel": "DESTACADO",
+    "time": "Hace 2 horas",
+    "author": "Editor FM26",
+    "comments": "24",
+    "views": "3.2K",
+    "featured": true
+  },
+  {
+    "id": 2,
+    "title": "MetLife Stadium: La Catedral del Mundial 2026 que Albergará la Gran Final",
+    "excerpt": "Con capacidad para más de 82,000 espectadores, el MetLife Stadium en Nueva Jersey será el escenario de la final del Mundial 2026. Descubre todos los detalles del estadio más importante del torneo.",
+    "image": "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=800&q=80",
+    "category": "sedes",
+    "categoryIcon": "🏟️",
+    "categoryLabel": "SEDES",
+    "time": "Hace 4 horas",
+    "author": "Redacción",
+    "comments": "18",
+    "views": "2.8K"
+  },
+  {
+    "id": 3,
+    "title": "Brasil Presenta su Lista Preliminar con Sorpresas: Vinicius Jr. Lidera la Convocatoria",
+    "excerpt": "La Confederación Brasileña de Fútbol reveló la lista de 26 jugadores que representarán al pentacampeón mundial. Vinicius Jr., Rodrygo y Endrick encabezan una selección llena de talento joven.",
+    "image": "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=800&q=80",
+    "category": "selecciones",
+    "categoryIcon": "🏳️",
+    "categoryLabel": "SELECCIONES",
+    "time": "Hace 5 horas",
+    "author": "Carlos López",
+    "comments": "31",
+    "views": "4.1K"
+  },
+  {
+    "id": 4,
+    "title": "Calendario Completo: Todas las Fechas y Horarios del Mundial 2026",
+    "excerpt": "FIFA confirmó el calendario definitivo con los 104 partidos distribuidos en 16 ciudades de Estados Unidos, México y Canadá. La inauguración será el 11 de junio en el Estadio Azteca.",
+    "image": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&q=80",
+    "category": "noticias",
+    "categoryIcon": "📰",
+    "categoryLabel": "NOTICIAS",
+    "time": "Hace 6 horas",
+    "author": "Redacción",
+    "comments": "42",
+    "views": "5.6K"
+  },
+  {
+    "id": 5,
+    "title": "México Confirma su Convocatoria: El Tri Busca Superar la Maldición del Quinto Partido",
+    "excerpt": "El director técnico de la selección mexicana presentó la lista definitiva de 26 jugadores. Con la ventaja de ser local, México sueña con hacer historia en su mundial.",
+    "image": "https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=800&q=80",
+    "category": "selecciones",
+    "categoryIcon": "🏳️",
+    "categoryLabel": "SELECCIONES",
+    "time": "Hace 8 horas",
+    "author": "Miguel Ángel",
+    "comments": "56",
+    "views": "7.2K"
+  },
+  {
+    "id": 6,
+    "title": "Análisis Táctico: Las 5 Selecciones Más Peligrosas del Mundial 2026",
+    "excerpt": "Repasamos las fortalezas y debilidades de Argentina, Francia, Brasil, Inglaterra y España, las cinco selecciones que parten como máximas candidatas al título.",
+    "image": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&q=80",
+    "category": "analisis",
+    "categoryIcon": "📊",
+    "categoryLabel": "ANÁLISIS",
+    "time": "Hace 10 horas",
+    "author": "Analista FM26",
+    "comments": "19",
+    "views": "2.3K"
+  }
+]
