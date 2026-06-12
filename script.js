@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function playIframe(url, container) {
     container.innerHTML = `
-      <iframe src="${url}" style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;background:#000;" sandbox="allow-scripts allow-same-origin allow-presentation" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <iframe src="${url}" style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;background:#000;" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-forms" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     `;
   }
 

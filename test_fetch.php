@@ -20,7 +20,7 @@ echo "HTTP CODE: " . $http_code . "\n";
 if ($error) {
     echo "ERROR: " . $error . "\n";
 } else {
-    echo "RESPONSE (first 2000 chars):\n";
-    echo substr($response, 0, 2000) . "\n";
+    echo "RESPONSE:\n";
+    echo $response . "\n";
 }
 ?>
