@@ -129,8 +129,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function playIframe(url, container) {
+    let playUrl = url;
+    let sandboxAttr = 'sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-forms"';
+    
+    if (url.includes('canalesdeportivos.net/')) {
+      // Dynamic routing through our same-origin PHP proxy
+      const match = url.match(/canalesdeportivos\.net\/([a-zA-Z0-9_-]+\.php)/);
+      if (match) {
+        playUrl = `proxy.php?canal=${match[1]}`;
+        // Since we strip the anti-sandbox scripts in our proxy, we can use a strict sandbox that blocks all popups!
+        sandboxAttr = 'sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"';
+      }
+    }
+
     container.innerHTML = `
-      <iframe src="${url}" style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;background:#000;" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-forms" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <iframe src="${playUrl}" style="width:100%;height:100%;position:absolute;top:0;left:0;border:none;background:#000;" ${sandboxAttr} allow="autoplay; encrypted-media" allowfullscreen></iframe>
     `;
   }
 
