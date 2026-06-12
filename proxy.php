@@ -184,6 +184,9 @@ if (strpos($content_type, 'text/html') !== false || strpos($response, '<html') !
     $response = preg_replace('/aclib\.runPop\(.*?\);/is', '', $response);
     $response = preg_replace('/<script src="https:\/\/millerthe\.com\/.*?<\/script>/is', '', $response);
     $response = preg_replace('/<script>!function\(\)\{try\{var t=\["sandbox".*?<\/script>/is', '', $response);
+    
+    // Remove the specific SANDBOX IFRAME NOT ALLOWED check scripts
+    $response = preg_replace('/<script[^>]*>[^<]*SANDBOX IFRAME NOT ALLOWED[^<]*<\/script>/is', '', $response);
 
     // Rewrite any static links to go through our proxy with absolute paths
     $response = preg_replace_callback('/(src|href)=["\'](https?:\/\/[a-z0-9.-]+(?:\.xyz|\.live|\.click|\.net)\/[^"\']+)["\']/i', function($matches) {
