@@ -63,33 +63,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ---- TV Channels Setup (GoPelotero + National) ----
   const DEFAULT_CHANNELS = [
-    { name: "Directv Sports (DSports)", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/directvsports.php", type: "iframe" },
-    { name: "DSports 2", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/dsports2.php", type: "iframe" },
-    { name: "DSports Plus", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/directvplushd.php", type: "iframe" },
-    { name: "ESPN HD", flag: "🇺🇸 USA", url: "https://canalesdeportivos.net/espnhd.php", type: "iframe" },
-    { name: "ESPN 2", flag: "🇺🇸 USA", url: "https://canalesdeportivos.net/espn2hd.php", type: "iframe" },
-    { name: "ESPN 3", flag: "🇺🇸 USA", url: "https://canalesdeportivos.net/espn3hd.php", type: "iframe" },
-    { name: "ESPN 4", flag: "🇺🇸 USA", url: "https://canalesdeportivos.net/espn4.php", type: "iframe" },
-    { name: "ESPN Premium", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/espnpremium.php", type: "iframe" },
-    { name: "Fox Sports HD", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/foxsportshd.php", type: "iframe" },
-    { name: "Fox Sports 2", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/foxsports2.php", type: "iframe" },
-    { name: "Fox Sports 3", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/foxsports3.php", type: "iframe" },
-    { name: "GolPerú", flag: "🇵🇪 PER", url: "https://canalesdeportivos.net/golperu.php", type: "iframe" },
-    { name: "GolTV", flag: "🇺🇾 URU", url: "https://canalesdeportivos.net/goltv.php", type: "iframe" },
-    { name: "Movistar Deportes", flag: "🇵🇪 PER", url: "https://canalesdeportivos.net/movistardeportes.php", type: "iframe" },
-    { name: "TyC Sports", flag: "🇦🇷 ARG", url: "https://canalesdeportivos.net/tycsports.php", type: "iframe" },
-    { name: "Chilevisión", flag: "🇨🇱 CHI", url: "https://canalesdeportivos.net/chilevision.php", type: "iframe" },
-    { name: "Win Sports", flag: "🇨🇴 COL", url: "https://canalesdeportivos.net/winsports.php", type: "iframe" },
-    { name: "Win Sports+", flag: "🇨🇴 COL", url: "https://canalesdeportivos.net/winmas.php", type: "iframe" },
-    { name: "TUDN", flag: "🇲🇽 MEX", url: "https://canalesdeportivos.net/tudn.php", type: "iframe" },
-    { name: "Canal 5", flag: "🇲🇽 MEX", url: "https://channel01.akamaized.net/hls/live/2038653/event01/index.m3u8", type: "hls" },
-    { name: "Azteca 7", flag: "🇲🇽 MEX", url: "https://mdstrm.com/live-stream-playlist/574463697b9817cf0886fc17.m3u8", type: "hls" },
-    { name: "Latina", flag: "🇵🇪 PE", url: "https://canalesdeportivos.net/latina.php", type: "iframe" },
-    { name: "Canal 26", flag: "🇦🇷 AR", url: "https://stream.bfrfrede.workers.dev/canal26", type: "hls" },
-    { name: "Ecuavisa", flag: "🇪🇨 EC", url: "https://signalecuavisa.pc.cdn.bitgravity.com/Ecuavisa/hd/playlist.m3u8", type: "hls" },
-    { name: "Mega", flag: "🇨🇱 CL", url: "https://mdstrm.com/live-stream-playlist/5c0e8b19e4c87a3d4376e3b1.m3u8", type: "hls" },
-    { name: "Canal 13", flag: "🇨🇱 CL", url: "https://origin2.dfrfrfr.workers.dev/c13", type: "hls" }
+    { name: "TyC Sports", flag: "🇦🇷 AR", url: "https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8", type: "hls" },
+    { name: "Canal 5 (Televisa)", flag: "🇲🇽 MX", url: "http://45.5.119.43:4000/play/a05o/index.m3u8", type: "hls" },
+    { name: "Azteca Internacional", flag: "🇲🇽 MX", url: "https://azt-mun.otteravision.com/azt/mun/mun.m3u8", type: "hls" },
+    { name: "Latina Televisión", flag: "🇵🇪 PE", url: "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8", type: "hls" },
+    { name: "Ecuavisa (Quito)", flag: "🇪🇨 EC", url: "https://redirector.dps.live/hls-video/c54ac2799874375c81c1672abb700870537c5223/ecuavisa/ecuavisa.smil/playlist.m3u8", type: "hls" },
+    { name: "Ecuavisa (Guayaquil)", flag: "🇪🇨 EC", url: "https://dai.google.com/linear/hls/event/GyPkTVDZSXGhpOvxPK7m2g/master.m3u8", type: "hls" },
+    { name: "TVN (Chile)", flag: "🇨🇱 CL", url: "http://217.26.190.76:8888/play/a0m6/index.m3u8", type: "hls" },
+    { name: "Canal 26", flag: "🇦🇷 AR", url: "https://stream-gtlc.telecentro.net.ar/hls/canal26hls/main.m3u8", type: "hls" },
+    { name: "TeleSUR", flag: "🇻🇪 VE", url: "https://mblesmain01.telesur.ultrabase.net/mbliveMain/hd/chunklist.m3u8", type: "hls" },
+    { name: "DW Español", flag: "🇩🇪 DE", url: "https://dwamdstream104.akamaized.net/hls/live/2015530/dwstream104/index.m3u8", type: "hls" }
   ];
+
 
   // Load channels from localStorage or set defaults
   let channels = [];
