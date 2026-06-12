@@ -19,15 +19,15 @@ if (!isset($_GET['url']) || empty($_GET['url'])) {
     $url = $_GET['url'];
 }
 
-// Security Check: Only allow streaming-related domains
+// Security Check: Only allow streaming-related domains (supporting subdomains)
 $allowed_patterns = [
     '/^https?:\/\/(www\.)?canalesdeportivos\.net/i',
-    '/^https?:\/\/[a-z0-9-]+\.xyz/i', // Matches streamtpday1.xyz, streamtp.xyz, etc.
-    '/^https?:\/\/[a-z0-9-]+\.live/i',
-    '/^https?:\/\/[a-z0-9-]+\.click/i',
-    '/^https?:\/\/[a-z0-9-]+\.net/i',
-    '/^https?:\/\/[a-z0-9-]+\.org/i',
-    '/^https?:\/\/[a-z0-9-]+\.com/i',
+    '/^https?:\/\/[a-z0-9.-]+\.xyz/i', // Matches subdomains
+    '/^https?:\/\/[a-z0-9.-]+\.live/i',
+    '/^https?:\/\/[a-z0-9.-]+\.click/i',
+    '/^https?:\/\/[a-z0-9.-]+\.net/i',
+    '/^https?:\/\/[a-z0-9.-]+\.org/i',
+    '/^https?:\/\/[a-z0-9.-]+\.com/i',
 ];
 
 $allowed = false;
@@ -51,6 +51,9 @@ if (strpos($url, 'canalesdeportivos.net') !== false) {
     $referer = 'https://gopelotero.com/';
 } elseif (strpos($url, 'deepcathink.com') !== false) {
     $referer = 'https://canalesdeportivos.net/';
+} else {
+    // Default referer for CDNs and other media frames (e.g. zohanayaan.com)
+    $referer = 'https://deepcathink.com/';
 }
 
 $ch = curl_init();
@@ -96,6 +99,53 @@ if (strpos($content_type, 'text/html') !== false || strpos($response, '<html') !
                 writable: false,
                 configurable: false
             });
+
+            // Intercept XMLHttpRequest to redirect .m3u8 requests through proxy.php
+            (function() {
+                var XHR = XMLHttpRequest.prototype;
+                var open = XHR.open;
+                XHR.open = function(method, url) {
+                    if (typeof url === "string" && url.indexOf(".m3u8") !== -1 && url.indexOf("proxy.php") === -1) {
+                        var absoluteUrl = url;
+                        if (url.indexOf("http") !== 0) {
+                            var a = document.createElement("a");
+                            a.href = url;
+                            absoluteUrl = a.href;
+                        }
+                        if (absoluteUrl.indexOf("https://crazydeportes.com") !== 0) {
+                            console.log("XHR .m3u8 intercepted and proxied:", absoluteUrl);
+                            url = "https://crazydeportes.com/proxy.php?url=" + encodeURIComponent(absoluteUrl);
+                        }
+                    }
+                    return open.apply(this, arguments);
+                };
+            })();
+
+            // Intercept Fetch API to redirect .m3u8 requests through proxy.php
+            if (window.fetch) {
+                var originalFetch = window.fetch;
+                window.fetch = function(input, init) {
+                    var url = typeof input === "string" ? input : (input && input.url);
+                    if (typeof url === "string" && url.indexOf(".m3u8") !== -1 && url.indexOf("proxy.php") === -1) {
+                        var absoluteUrl = url;
+                        if (url.indexOf("http") !== 0) {
+                            var a = document.createElement("a");
+                            a.href = url;
+                            absoluteUrl = a.href;
+                        }
+                        if (absoluteUrl.indexOf("https://crazydeportes.com") !== 0) {
+                            console.log("Fetch .m3u8 intercepted and proxied:", absoluteUrl);
+                            var proxiedUrl = "https://crazydeportes.com/proxy.php?url=" + encodeURIComponent(absoluteUrl);
+                            if (typeof input === "string") {
+                                input = proxiedUrl;
+                            } else {
+                                input = new Request(proxiedUrl, init);
+                            }
+                        }
+                    }
+                    return originalFetch.call(this, input, init);
+                };
+            }
 
             // Interceptor function to rewrite iframe URLs to go through proxy.php
             function checkAndProxyIframe(iframe) {
@@ -193,8 +243,8 @@ if (strpos($content_type, 'text/html') !== false || strpos($response, '<html') !
         $attr = $matches[1];
         $target_url = $matches[2];
         
-        // Skip direct media streams (m3u8, mp4, ts) and stylesheet/script files to save server resources
-        if (preg_match('/\.(m3u8|mp4|ts|css|js|png|jpg|gif|jpeg|svg|woff|woff2|ttf)/i', $target_url)) {
+        // Skip direct media streams (mp4, ts) and stylesheet/script files to save server resources (proxy .m3u8)
+        if (preg_match('/\.(mp4|ts|css|js|png|jpg|gif|jpeg|svg|woff|woff2|ttf)/i', $target_url)) {
             return $matches[0];
         }
         
@@ -206,6 +256,17 @@ if (strpos($content_type, 'text/html') !== false || strpos($response, '<html') !
     if (strpos($url, 'canalesdeportivos.net') !== false) {
         $response = str_replace('href="/"', 'href="https://canalesdeportivos.net/"', $response);
     }
+} elseif (strpos($content_type, 'mpegurl') !== false || strpos($response, '#EXTM3U') === 0 || preg_match('/\.m3u8/i', $url)) {
+    // HLS Playlist (.m3u8): Rewrite relative paths to absolute CDN paths
+    $lines = explode("\n", $response);
+    $base_dir = substr($url, 0, strrpos($url, '/') + 1); // e.g., https://cdn12.zohanayaan.com:1686/hls/
+    foreach ($lines as &$line) {
+        $line = trim($line);
+        if ($line !== '' && $line[0] !== '#' && strpos($line, '://') === false) {
+            $line = $base_dir . $line;
+        }
+    }
+    $response = implode("\n", $lines);
 }
 
 // Forward the original Content-Type header
