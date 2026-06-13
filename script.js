@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ---- Clear stale localStorage cache on every page load ----
   // This prevents old/cached content from showing on devices
   try {
-    const cacheVersion = 'fm26_v5'; // Bump this to force cache clear
+    const cacheVersion = 'fm26_v6'; // Bump this to force cache clear
     if (localStorage.getItem('fm26_cache_version') !== cacheVersion) {
       // Remove all fm26_ cached data
       const keysToRemove = [];
@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ---- TV Channels Setup (GoPelotero + National) ----
   const DEFAULT_CHANNELS = [
     { name: "🏆 RTRTV Mundial", flag: "🏆", url: "https://tv3ecuador.site/hls/stream/index.m3u8", type: "hls" },
+    { name: "🇧🇷 CazéTV Mundial", flag: "🇧🇷", url: "https://www.youtube.com/embed/live_stream?channel=UCZiYbVptd3PJlhKEkx1sHJQ&autoplay=1", type: "iframe" },
     { name: "TyC Sports", flag: "🇦🇷 AR", url: "https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8", type: "hls" },
     { name: "ADN 40 (México)", flag: "🇲🇽 MX", url: "https://mdstrm.com/live-stream-playlist/60b578b060947317de7b57ac.m3u8", type: "hls" },
     { name: "Azteca Internacional", flag: "🇲🇽 MX", url: "https://azt-mun.otteravision.com/azt/mun/mun.m3u8", type: "hls" },
@@ -112,16 +113,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     `;
     const video = document.getElementById('hls-video');
     if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-      const hls = new Hls({ enableWorker: true });
+      const hls = new Hls({
+        enableWorker: true,
+        lowLatencyMode: true,
+        startLevel: -1,              // Auto-select best quality
+        capLevelToPlayerSize: true,   // Don't load higher than screen
+        maxBufferLength: 30,          // Buffer 30 seconds ahead
+        maxMaxBufferLength: 60,       // Max buffer
+        maxBufferSize: 60 * 1000 * 1000, // 60MB buffer
+        maxBufferHole: 0.5,           // Tolerate small gaps
+        fragLoadingTimeOut: 20000,    // Wait 20s for fragments
+        manifestLoadingTimeOut: 10000,
+        levelLoadingTimeOut: 10000,
+        fragLoadingMaxRetry: 6,       // Retry 6 times on failure
+        levelLoadingMaxRetry: 4,
+        startFragPrefetch: true       // Pre-fetch next fragment
+      });
       hls.loadSource(url);
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         video.play().catch(() => {});
       });
+      // Auto-recover from errors instead of crashing
       hls.on(Hls.Events.ERROR, (event, data) => {
         if (data.fatal) {
-          console.warn('HLS player fatal error, trying fallback as iframe:', url);
-          playIframe(url, container);
+          switch (data.type) {
+            case Hls.ErrorTypes.NETWORK_ERROR:
+              console.warn('HLS network error, attempting recovery...');
+              hls.startLoad();
+              break;
+            case Hls.ErrorTypes.MEDIA_ERROR:
+              console.warn('HLS media error, attempting recovery...');
+              hls.recoverMediaError();
+              break;
+            default:
+              console.warn('HLS fatal error, trying iframe fallback');
+              hls.destroy();
+              playIframe(url, container);
+              break;
+          }
         }
       });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
