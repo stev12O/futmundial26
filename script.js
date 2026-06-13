@@ -454,7 +454,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (upcoming.length > 0) {
             html += `<div style="padding:4px 8px; font-size:0.7rem; font-weight:800; color:var(--gold); text-transform:uppercase; border-bottom:1px solid var(--border-color);">⏰ POR JUGAR</div>`;
             upcoming.forEach(event => {
-              const timeStr = event.strTime ? event.strTime.substring(0, 5) : '';
+              // Convert UTC time to visitor's local timezone
+              let utcTs = event.strTimestamp || `${event.dateEvent}T${event.strTime}`;
+              if (utcTs && !utcTs.endsWith('Z') && !utcTs.includes('+')) utcTs += 'Z';
+              const localTime = new Date(utcTs);
+              const timeStr = localTime.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
               html += `
                 <div class="sidebar-match">
                   <span class="time">${timeStr}</span>
@@ -485,7 +489,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             .then(nextData => {
               if (nextData && nextData.events && nextData.events.length > 0) {
                 todayMatchesContainer.innerHTML = nextData.events.slice(0, 3).map(event => {
-                  const dateObj = new Date(event.strTimestamp || `${event.dateEvent}T${event.strTime}`);
+                  let fbTs = event.strTimestamp || `${event.dateEvent}T${event.strTime}`;
+                  if (fbTs && !fbTs.endsWith('Z') && !fbTs.includes('+')) fbTs += 'Z';
+                  const dateObj = new Date(fbTs);
                   const formattedDate = dateObj.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' });
                   const formattedTime = dateObj.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
                   return `
