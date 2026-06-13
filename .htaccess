@@ -1,0 +1,29 @@
+# FutMundial26 — Siempre servir la versión nueva
+# Sube este archivo a tu hosting junto con el resto
+
+# HTML, CSS, JS y JSON: SIEMPRE la versión más reciente
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|htm|css|js|json)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+</IfModule>
+
+# Imágenes: cachear 7 días (estas no cambian)
+<IfModule mod_headers.c>
+  <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>
+
+# Desactivar ETags (causan caché viejo en algunos hosts)
+FileETag None
+
+# Compresión (más rápido)
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json
+</IfModule>
+
+# No mostrar listado de carpetas
+Options -Indexes

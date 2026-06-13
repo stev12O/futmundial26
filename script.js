@@ -3,6 +3,24 @@
 // ============================================
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // ---- Clear stale localStorage cache on every page load ----
+  // This prevents old/cached content from showing on devices
+  try {
+    const cacheVersion = 'fm26_v4'; // Bump this to force cache clear
+    if (localStorage.getItem('fm26_cache_version') !== cacheVersion) {
+      // Remove all fm26_ cached data
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('fm26_') && key !== 'fm26_cache_version') {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(k => localStorage.removeItem(k));
+      localStorage.setItem('fm26_cache_version', cacheVersion);
+    }
+  } catch(e) { /* localStorage not available */ }
+
   // ---- Navbar scroll effect ----
   const navbar = document.querySelector('.navbar');
   if (navbar) {
@@ -206,21 +224,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, 5000);
   }
 
-  // ---- News Loading System (JSON + LocalStorage) ----
+  // ---- News Loading System (always fresh from JSON, no cache) ----
   async function loadArticles() {
-    const localArticles = localStorage.getItem('fm26_articles');
-    if (localArticles) {
-      return JSON.parse(localArticles);
-    } else {
-      try {
-        const res = await fetch('data/articles.json');
-        const articles = await res.json();
-        localStorage.setItem('fm26_articles', JSON.stringify(articles));
-        return articles;
-      } catch (e) {
-        console.error('Error fetching default articles', e);
-        return [];
-      }
+    try {
+      const res = await fetch('data/articles.json?t=' + Date.now());
+      const articles = await res.json();
+      return articles;
+    } catch (e) {
+      console.error('Error fetching articles', e);
+      return [];
     }
   }
 
