@@ -679,20 +679,19 @@
       });
     }
 
-    // --- News Articles Management ---
+    // --- News Articles Management (Server API) ---
     async function loadNews() {
-      const storedArticles = localStorage.getItem('fm26_articles');
-      if (storedArticles) {
-        articles = JSON.parse(storedArticles);
+      try {
+        const res = await fetch('api/articles.php?t=' + Date.now());
+        articles = await res.json();
         renderNewsList();
-      } else {
-        // Fallback to default articles.json
+      } catch (e) {
+        // Fallback to direct JSON
         try {
-          const res = await fetch('data/articles.json');
+          const res = await fetch('data/articles.json?t=' + Date.now());
           articles = await res.json();
-          localStorage.setItem('fm26_articles', JSON.stringify(articles));
           renderNewsList();
-        } catch (e) {
+        } catch (e2) {
           articles = [];
           renderNewsList();
         }
@@ -718,13 +717,14 @@
             </div>
           </div>
           <div class="list-item-actions">
+            <a href="noticia.html?id=${art.id}" target="_blank" class="btn-admin btn-secondary" style="padding: 0.5rem 0.75rem;" title="Ver noticia"><i class="fas fa-external-link-alt"></i></a>
             <button onclick="deleteNews(${art.id})" class="btn-admin btn-danger" style="padding: 0.5rem 0.75rem;"><i class="far fa-trash-alt"></i></button>
           </div>
         </div>
       `).join('');
     }
 
-    function handleNewsSubmit(e) {
+    async function handleNewsSubmit(e) {
       e.preventDefault();
 
       const title = document.getElementById('news-title').value;
@@ -741,6 +741,10 @@
         return;
       }
 
+      const submitBtn = document.getElementById('news-submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publicando...';
+
       const newArticle = {
         id: Date.now(),
         title,
@@ -756,25 +760,56 @@
         featured: false
       };
 
-      articles.unshift(newArticle);
-      localStorage.setItem('fm26_articles', JSON.stringify(articles));
+      try {
+        const res = await fetch('api/articles.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newArticle)
+        });
+        const data = await res.json();
 
-      showToast('Noticia publicada con éxito!', 'success');
-      renderNewsList();
+        if (data.success) {
+          showToast('✅ Noticia publicada en el servidor! Todos la pueden ver.', 'success');
+          await loadNews(); // Reload from server
+        } else {
+          throw new Error(data.error || 'Error desconocido');
+        }
+      } catch (err) {
+        console.error('Error saving to server:', err);
+        // Fallback: save locally
+        articles.unshift(newArticle);
+        showToast('⚠️ Guardado localmente (el servidor no respondió)', 'error');
+        renderNewsList();
+      }
 
       // Reset form
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Publicar Noticia';
       document.getElementById('news-form').reset();
       document.getElementById('image-preview').style.display = 'none';
       document.getElementById('upload-status').style.display = 'none';
       document.getElementById('news-image-url').value = '';
     }
 
-    function deleteNews(id) {
+    async function deleteNews(id) {
       if (!confirm('¿Estás seguro de que deseas eliminar esta noticia?')) return;
-      articles = articles.filter(art => art.id !== id);
-      localStorage.setItem('fm26_articles', JSON.stringify(articles));
-      showToast('Noticia eliminada', 'success');
-      renderNewsList();
+
+      try {
+        const res = await fetch(`api/articles.php?id=${id}`, { method: 'DELETE' });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast('Noticia eliminada del servidor', 'success');
+          await loadNews(); // Reload from server
+        } else {
+          throw new Error(data.error);
+        }
+      } catch (err) {
+        // Fallback local
+        articles = articles.filter(art => art.id !== id);
+        showToast('Eliminada localmente', 'success');
+        renderNewsList();
+      }
     }
 
     // --- TV Channels Management ---
