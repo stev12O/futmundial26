@@ -338,7 +338,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (data && data.events && data.events.length > 0) {
           const now = new Date();
           for (const ev of data.events) {
-            const eventTime = new Date(ev.strTimestamp || `${ev.dateEvent}T${ev.strTime}`);
+            let evTs = ev.strTimestamp || `${ev.dateEvent}T${ev.strTime}`;
+            if (evTs && !evTs.endsWith('Z') && !evTs.includes('+')) evTs += 'Z';
+            const eventTime = new Date(evTs);
             if (eventTime > now) {
               nextMatch = ev;
               break;
@@ -348,7 +350,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (nextMatch) {
-          const matchDate = new Date(nextMatch.strTimestamp || `${nextMatch.dateEvent}T${nextMatch.strTime}`);
+          // TheSportsDB timestamps are UTC but sometimes missing the 'Z' suffix
+          let tsStr = nextMatch.strTimestamp || `${nextMatch.dateEvent}T${nextMatch.strTime}`;
+          if (tsStr && !tsStr.endsWith('Z') && !tsStr.includes('+')) tsStr += 'Z';
+          const matchDate = new Date(tsStr);
           if (nextMatchText) {
             const grp = nextMatch.strGroup ? ` — Grupo ${nextMatch.strGroup}` : '';
             nextMatchText.textContent = `${getFlagEmoji(nextMatch.strHomeTeam)} ${nextMatch.strHomeTeam} vs ${nextMatch.strAwayTeam} ${getFlagEmoji(nextMatch.strAwayTeam)}${grp}`;
