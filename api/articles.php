@@ -67,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'id' => isset($input['id']) ? intval($input['id']) : intval(microtime(true) * 1000),
         'title' => htmlspecialchars($input['title'], ENT_QUOTES, 'UTF-8'),
         'excerpt' => htmlspecialchars($input['excerpt'], ENT_QUOTES, 'UTF-8'),
+        'body' => $input['body'] ?? '',
         'image' => filter_var($input['image'] ?? '', FILTER_SANITIZE_URL),
         'category' => $input['category'] ?? 'noticias',
         'categoryIcon' => $input['categoryIcon'] ?? '📰',

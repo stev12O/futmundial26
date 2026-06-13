@@ -370,41 +370,30 @@
       `).join('');
     })();
 
-    // Generate expanded article body from excerpt
+    // Generate article body - uses real content if available
     function generateArticleBody(article) {
-      const excerpt = article.excerpt;
-
-      // Create multi-paragraph article content based on category
-      const paragraphs = [];
-      paragraphs.push(`<p><strong>${excerpt}</strong></p>`);
-
-      if (article.category === 'selecciones') {
-        paragraphs.push(`<p>El equipo llega a este Mundial 2026 con una preparación exhaustiva y un plantel que combina experiencia con juventud. Los resultados en los partidos de clasificación y amistosos previos al torneo han demostrado el nivel competitivo de esta selección.</p>`);
-        paragraphs.push(`<h2>Jugadores Clave</h2>`);
-        paragraphs.push(`<p>La columna vertebral del equipo se mantiene sólida, con jugadores que militan en las mejores ligas europeas y que aportan la experiencia necesaria para competir al más alto nivel en un Mundial que promete ser histórico.</p>`);
-        paragraphs.push(`<blockquote>"Este Mundial es especial para nosotros. Jugar en casa, con nuestra gente, es algo que nos motiva enormemente." — Director Técnico</blockquote>`);
-        paragraphs.push(`<p>El sistema táctico ha evolucionado en los últimos meses, incorporando variantes que permiten al equipo adaptarse a diferentes estilos de juego. La versatilidad será clave en un torneo donde cada partido puede ser el último.</p>`);
-      } else if (article.category === 'sedes') {
-        paragraphs.push(`<p>Las sedes del Mundial 2026 representan lo mejor de la infraestructura deportiva de Norteamérica. Con estadios de última generación equipados con tecnología de punta, los aficionados vivirán una experiencia sin precedentes.</p>`);
-        paragraphs.push(`<h2>Capacidad e Infraestructura</h2>`);
-        paragraphs.push(`<p>Cada estadio ha sido preparado durante meses para cumplir con los estándares FIFA. Las mejoras incluyen sistemas de iluminación LED, pantallas gigantes de última generación, conectividad 5G para los asistentes y zonas de fan experience únicas.</p>`);
-        paragraphs.push(`<p>El transporte público en las ciudades sede ha sido reforzado con rutas especiales para los días de partido, garantizando que los aficionados puedan llegar y salir del estadio de manera eficiente.</p>`);
-      } else if (article.category === 'analisis') {
-        paragraphs.push(`<p>El análisis detallado de las selecciones participantes revela un torneo que promete ser el más competitivo de la historia. Con 48 equipos divididos en 12 grupos, la fase de grupos será más impredecible que nunca.</p>`);
-        paragraphs.push(`<h2>Datos y Estadísticas</h2>`);
-        paragraphs.push(`<p>Los números no mienten: las selecciones favoritas llegan con porcentajes de posesión superiores al 55% en sus últimos partidos, pero los equipos considerados "débiles" han demostrado que pueden competir de igual a igual en torneos cortos.</p>`);
-        paragraphs.push(`<blockquote>"En un Mundial, cualquier cosa puede pasar. Lo hemos visto una y otra vez." — Analista deportivo</blockquote>`);
-        paragraphs.push(`<p>La implementación del VAR y la nueva tecnología de fuera de juego semiautomática prometen reducir las controversias arbitrales, aunque la polémica siempre será parte del fútbol.</p>`);
-      } else {
-        paragraphs.push(`<p>El Mundial FIFA 2026 marca un hito histórico al ser el primero con 48 selecciones participantes y el primero en celebrarse en tres países: Estados Unidos, México y Canadá. Con 104 partidos distribuidos en 16 ciudades, será el torneo más grande jamás organizado.</p>`);
-        paragraphs.push(`<h2>Lo Que Debes Saber</h2>`);
-        paragraphs.push(`<p>FIFA ha implementado nuevas reglas para esta edición, incluyendo cambios en el formato de grupos y la incorporación de tecnología avanzada para mejorar la experiencia tanto de los jugadores como de los espectadores.</p>`);
-        paragraphs.push(`<p>Los horarios han sido diseñados pensando en las audiencias globales, con partidos programados para maximizar la audiencia televisiva en Europa, América y Asia. Esto significa que habrá fútbol prácticamente a todas horas del día.</p>`);
+      // If article has a body field (written from admin), use it
+      if (article.body && article.body.trim().length > 0) {
+        // Convert plain text paragraphs to HTML
+        const paragraphs = article.body.split(/\n\n+/).map(p => {
+          p = p.trim();
+          if (!p) return '';
+          return `<p>${p.replace(/\n/g, '<br>')}</p>`;
+        }).filter(p => p);
+        
+        // Add excerpt as bold intro
+        return `<p><strong>${article.excerpt}</strong></p>\n${paragraphs.join('\n')}\n<h2>Sigue el Mundial en CrazyDeportes</h2>\n<p>En CrazyDeportes te mantenemos informado minuto a minuto con todas las noticias, resultados en vivo, estadísticas y análisis del Mundial 2026.</p>`;
       }
 
+      // Fallback: auto-generate from excerpt (for older articles without body)
+      const excerpt = article.excerpt;
+      const paragraphs = [];
+      paragraphs.push(`<p><strong>${excerpt}</strong></p>`);
+      paragraphs.push(`<p>El Mundial FIFA 2026 marca un hito histórico al ser el primero con 48 selecciones participantes y el primero en celebrarse en tres países: Estados Unidos, México y Canadá. Con 104 partidos distribuidos en 16 ciudades, será el torneo más grande jamás organizado.</p>`);
+      paragraphs.push(`<h2>Lo Que Debes Saber</h2>`);
+      paragraphs.push(`<p>FIFA ha implementado nuevas reglas para esta edición, incluyendo cambios en el formato de grupos y la incorporación de tecnología avanzada para mejorar la experiencia tanto de los jugadores como de los espectadores.</p>`);
       paragraphs.push(`<h2>Sigue el Mundial en CrazyDeportes</h2>`);
       paragraphs.push(`<p>En CrazyDeportes te mantenemos informado minuto a minuto con todas las noticias, resultados en vivo, estadísticas y análisis del Mundial 2026. No te pierdas ningún detalle del torneo más importante del fútbol mundial.</p>`);
-
       return paragraphs.join('\n');
     }
   </script>

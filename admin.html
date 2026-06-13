@@ -402,11 +402,17 @@
             </div>
 
             <div class="form-group">
-              <label for="news-excerpt">Resumen / Copete</label>
-              <textarea id="news-excerpt" class="form-control" required placeholder="Resumen corto de la noticia para las tarjetas de la página de inicio..."></textarea>
+              <label for="news-excerpt">Resumen / Copete (se muestra en las tarjetas)</label>
+              <textarea id="news-excerpt" class="form-control" required placeholder="Resumen corto de la noticia para las tarjetas de la página de inicio..." style="min-height: 80px;"></textarea>
             </div>
 
-            <div class="form-row">
+            <div class="form-group">
+              <label for="news-body">Contenido del Artículo (el texto completo de la noticia)</label>
+              <textarea id="news-body" class="form-control" required placeholder="Escribe aquí todo el artículo...&#10;&#10;Puedes usar varios párrafos separados por líneas vacías.&#10;&#10;Cada párrafo se mostrará separado automáticamente." style="min-height: 250px;"></textarea>
+              <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.4rem;">
+                💡 Separa los párrafos con una línea vacía. Cada párrafo se verá como un bloque de texto separado en la noticia.
+              </p>
+            </div>            <div class="form-row">
               <div class="form-group">
                 <label for="news-category">Categoría</label>
                 <select id="news-category" class="form-control" required>
@@ -735,6 +741,7 @@
       const categoryIcon = categorySelect.options[categorySelect.selectedIndex].text.split(' ')[0];
       const author = document.getElementById('news-author').value;
       const imageUrl = document.getElementById('news-image-url').value;
+      const body = document.getElementById('news-body').value;
 
       if (!imageUrl) {
         showToast('Debes seleccionar y subir una imagen primero!', 'error');
@@ -749,6 +756,7 @@
         id: Date.now(),
         title,
         excerpt,
+        body,
         image: imageUrl,
         category,
         categoryIcon,
