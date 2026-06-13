@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     gridElement.innerHTML = filtered.map(article => `
-      <article class="article-card" onclick="window.location.href='noticias.html'">
+      <article class="article-card" onclick="window.location.href='noticia.html?id=${article.id}'">
         <div class="thumb">
           <img src="${article.image}" alt="${article.title}" loading="lazy">
           <span class="category-badge">${article.categoryIcon || '📰'} ${article.categoryLabel || 'NOTICIAS'}</span>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noticia — FutMundial26 | World Cup 2026 News</title>
+  <meta name="description" content="Latest FIFA World Cup 2026 news, scores, and analysis. Noticias del Mundial 2026.">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <!-- SEO for US traffic -->
+  <meta name="keywords" content="World Cup 2026, FIFA 2026, soccer, football, USA, Mexico, Canada, scores, live, news">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="CrazyDeportes — FutMundial26">
+  <meta property="og:locale" content="es_LA">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Dynamic OG tags set by JS -->
+  <meta property="og:title" id="og-title" content="FutMundial26 — World Cup 2026">
+  <meta property="og:description" id="og-desc" content="World Cup 2026 news and live scores">
+  <meta property="og:image" id="og-image" content="">
+
+  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .article-detail {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .article-detail .article-hero {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      border-radius: var(--radius-lg);
+      margin-bottom: 2rem;
+    }
+    .article-detail .article-badge {
+      display: inline-block;
+      background: var(--gold);
+      color: #000;
+      padding: 4px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .article-detail h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .article-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      padding: 1rem 0;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    .article-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .article-body {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+    .article-body p {
+      margin-bottom: 1.5rem;
+    }
+    .article-body h2 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin: 2rem 0 1rem;
+    }
+    .article-body blockquote {
+      border-left: 4px solid var(--gold);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      background: var(--bg-card);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      font-style: italic;
+      color: var(--text-primary);
+    }
+    .share-bar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--border-color);
+      margin-top: 2rem;
+    }
+    .share-bar span {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .share-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .share-btn:hover {
+      background: var(--gold);
+      color: #000;
+      border-color: var(--gold);
+    }
+    .related-section {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+    }
+    .related-section h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    .article-sidebar {
+      position: sticky;
+      top: 80px;
+    }
+    .article-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .article-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .sidebar-ad-slot {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      min-height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .inline-ad-slot {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin: 2rem 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-brand">
+        <div class="logo-icon">⚽</div>
+        <div class="logo-text">Fut<span>Mundial26</span></div>
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+        <a href="envivo.html"><i class="fas fa-tv"></i> En Vivo <span class="live-dot"></span></a>
+        <a href="noticias.html" class="active"><i class="far fa-newspaper"></i> Noticias</a>
+        <a href="calendario.html"><i class="far fa-calendar-alt"></i> Calendario</a>
+        <a href="grupos.html"><i class="fas fa-futbol"></i> Grupos</a>
+        <a href="selecciones.html"><i class="fas fa-flag"></i> Selecciones</a>
+      </div>
+      <div class="nav-actions">
+        <div class="nav-hamburger" id="nav-hamburger"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ARTICLE CONTENT -->
+  <section class="section" style="padding-top: 2rem;">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <div style="margin-bottom: 1.5rem; font-size: 0.85rem; color: var(--text-muted);">
+        <a href="index.html" style="color: var(--gold);">Inicio</a> /
+        <a href="noticias.html" style="color: var(--gold);">Noticias</a> /
+        <span id="breadcrumb-title">Cargando...</span>
+      </div>
+
+      <div class="article-layout">
+        <!-- Main Content -->
+        <div class="article-detail" id="article-detail">
+          <div style="text-align: center; padding: 4rem;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--gold);"></i>
+            <p style="margin-top: 1rem; color: var(--text-muted);">Cargando noticia...</p>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="article-sidebar">
+          <!-- Ad Slot 1 - Sidebar 300x250 -->
+          <div class="sidebar-ad-slot" id="sidebar-ad-1">
+            <!-- Ad slot ready for Adsterra or any network -->
+          </div>
+
+          <!-- More News -->
+          <div class="sidebar-card" id="more-news">
+            <h4><i class="fas fa-fire" style="color: var(--red);"></i> Más Noticias</h4>
+            <div id="sidebar-articles"></div>
+          </div>
+
+          <!-- Ad Slot 2 - Sidebar 300x250 -->
+          <div class="sidebar-ad-slot" id="sidebar-ad-2" style="margin-top: 1.5rem;">
+            <!-- Ad slot ready -->
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <span>© 2026 FutMundial26 — All rights reserved | <a href="admin.html" style="color: var(--gold); text-decoration: underline; margin-left: 8px;"><i class="fas fa-cog"></i> Admin</a></span>
+        <span>Made with ❤️ for soccer fans</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js?v=5"></script>
+  <script>
+    // ---- Article Detail Page Logic ----
+    (async function() {
+      const params = new URLSearchParams(window.location.search);
+      const articleId = parseInt(params.get('id'));
+
+      if (!articleId) {
+        window.location.href = 'noticias.html';
+        return;
+      }
+
+      // Fetch articles
+      let articles = [];
+      try {
+        const res = await fetch('data/articles.json?t=' + Date.now());
+        articles = await res.json();
+      } catch(e) {
+        document.getElementById('article-detail').innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:4rem;">Error loading article.</p>';
+        return;
+      }
+
+      const article = articles.find(a => a.id === articleId);
+      if (!article) {
+        document.getElementById('article-detail').innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:4rem;">Artículo no encontrado.</p>';
+        return;
+      }
+
+      // Update page title & meta
+      document.title = article.title + ' — FutMundial26 | World Cup 2026';
+      document.getElementById('og-title').content = article.title;
+      document.getElementById('og-desc').content = article.excerpt;
+      document.getElementById('og-image').content = article.image;
+      document.getElementById('breadcrumb-title').textContent = article.title.substring(0, 50) + '...';
+
+      // Generate article body (expanded from excerpt)
+      const articleBody = generateArticleBody(article);
+
+      // Render article
+      const shareUrl = encodeURIComponent(window.location.href);
+      const shareText = encodeURIComponent(article.title);
+
+      document.getElementById('article-detail').innerHTML = `
+        <span class="article-badge">${article.categoryIcon || '📰'} ${article.categoryLabel || 'NOTICIAS'}</span>
+        <h1>${article.title}</h1>
+        <div class="article-meta">
+          <span><i class="far fa-clock"></i> ${article.time}</span>
+          <span><i class="far fa-user"></i> ${article.author}</span>
+          <span><i class="far fa-comment"></i> ${article.comments || 0} comentarios</span>
+          <span><i class="far fa-eye"></i> ${article.views || 0} vistas</span>
+        </div>
+        <img src="${article.image}" alt="${article.title}" class="article-hero" loading="lazy">
+
+        <div class="article-body">
+          ${articleBody}
+        </div>
+
+        <!-- Inline Ad Slot (mid-article) -->
+        <div class="inline-ad-slot" id="inline-ad-1">
+          <!-- Ad slot ready -->
+        </div>
+
+        <!-- Share Bar -->
+        <div class="share-bar">
+          <span><i class="fas fa-share-alt"></i> Compartir:</span>
+          <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" class="share-btn" title="Share on X/Twitter"><i class="fab fa-x-twitter"></i></a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" class="share-btn" title="Share on Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}" target="_blank" class="share-btn" title="Share on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          <a href="https://t.me/share/url?url=${shareUrl}&text=${shareText}" target="_blank" class="share-btn" title="Share on Telegram"><i class="fab fa-telegram-plane"></i></a>
+          <button class="share-btn" onclick="navigator.clipboard.writeText(window.location.href).then(()=>this.innerHTML='<i class=\\'fas fa-check\\'></i>')" title="Copy link"><i class="fas fa-link"></i></button>
+        </div>
+
+        <!-- Related Articles -->
+        <div class="related-section">
+          <h3>📰 Noticias Relacionadas</h3>
+          <div class="related-grid" id="related-grid"></div>
+        </div>
+      `;
+
+      // Render related articles (same category, excluding current)
+      const related = articles
+        .filter(a => a.id !== articleId)
+        .slice(0, 3);
+
+      document.getElementById('related-grid').innerHTML = related.map(a => `
+        <article class="article-card" onclick="window.location.href='noticia.html?id=${a.id}'">
+          <div class="thumb">
+            <img src="${a.image}" alt="${a.title}" loading="lazy">
+            <span class="category-badge">${a.categoryIcon || '📰'} ${a.categoryLabel || 'NOTICIAS'}</span>
+          </div>
+          <div class="content">
+            <h3>${a.title}</h3>
+            <div class="meta">
+              <span><i class="far fa-clock"></i> ${a.time}</span>
+              <span><i class="far fa-eye"></i> ${a.views || 0}</span>
+            </div>
+          </div>
+        </article>
+      `).join('');
+
+      // Sidebar: more news
+      const sidebarArticles = articles
+        .filter(a => a.id !== articleId)
+        .slice(0, 5);
+
+      document.getElementById('sidebar-articles').innerHTML = sidebarArticles.map(a => `
+        <div class="trending-item" style="cursor:pointer;" onclick="window.location.href='noticia.html?id=${a.id}'">
+          <span class="rank">${a.categoryIcon || '📰'}</span>
+          <div class="info">
+            <h5>${a.title.substring(0, 60)}...</h5>
+            <span>${a.time} • ${a.views} vistas</span>
+          </div>
+        </div>
+      `).join('');
+    })();
+
+    // Generate expanded article body from excerpt
+    function generateArticleBody(article) {
+      const excerpt = article.excerpt;
+
+      // Create multi-paragraph article content based on category
+      const paragraphs = [];
+      paragraphs.push(`<p><strong>${excerpt}</strong></p>`);
+
+      if (article.category === 'selecciones') {
+        paragraphs.push(`<p>El equipo llega a este Mundial 2026 con una preparación exhaustiva y un plantel que combina experiencia con juventud. Los resultados en los partidos de clasificación y amistosos previos al torneo han demostrado el nivel competitivo de esta selección.</p>`);
+        paragraphs.push(`<h2>Jugadores Clave</h2>`);
+        paragraphs.push(`<p>La columna vertebral del equipo se mantiene sólida, con jugadores que militan en las mejores ligas europeas y que aportan la experiencia necesaria para competir al más alto nivel en un Mundial que promete ser histórico.</p>`);
+        paragraphs.push(`<blockquote>"Este Mundial es especial para nosotros. Jugar en casa, con nuestra gente, es algo que nos motiva enormemente." — Director Técnico</blockquote>`);
+        paragraphs.push(`<p>El sistema táctico ha evolucionado en los últimos meses, incorporando variantes que permiten al equipo adaptarse a diferentes estilos de juego. La versatilidad será clave en un torneo donde cada partido puede ser el último.</p>`);
+      } else if (article.category === 'sedes') {
+        paragraphs.push(`<p>Las sedes del Mundial 2026 representan lo mejor de la infraestructura deportiva de Norteamérica. Con estadios de última generación equipados con tecnología de punta, los aficionados vivirán una experiencia sin precedentes.</p>`);
+        paragraphs.push(`<h2>Capacidad e Infraestructura</h2>`);
+        paragraphs.push(`<p>Cada estadio ha sido preparado durante meses para cumplir con los estándares FIFA. Las mejoras incluyen sistemas de iluminación LED, pantallas gigantes de última generación, conectividad 5G para los asistentes y zonas de fan experience únicas.</p>`);
+        paragraphs.push(`<p>El transporte público en las ciudades sede ha sido reforzado con rutas especiales para los días de partido, garantizando que los aficionados puedan llegar y salir del estadio de manera eficiente.</p>`);
+      } else if (article.category === 'analisis') {
+        paragraphs.push(`<p>El análisis detallado de las selecciones participantes revela un torneo que promete ser el más competitivo de la historia. Con 48 equipos divididos en 12 grupos, la fase de grupos será más impredecible que nunca.</p>`);
+        paragraphs.push(`<h2>Datos y Estadísticas</h2>`);
+        paragraphs.push(`<p>Los números no mienten: las selecciones favoritas llegan con porcentajes de posesión superiores al 55% en sus últimos partidos, pero los equipos considerados "débiles" han demostrado que pueden competir de igual a igual en torneos cortos.</p>`);
+        paragraphs.push(`<blockquote>"En un Mundial, cualquier cosa puede pasar. Lo hemos visto una y otra vez." — Analista deportivo</blockquote>`);
+        paragraphs.push(`<p>La implementación del VAR y la nueva tecnología de fuera de juego semiautomática prometen reducir las controversias arbitrales, aunque la polémica siempre será parte del fútbol.</p>`);
+      } else {
+        paragraphs.push(`<p>El Mundial FIFA 2026 marca un hito histórico al ser el primero con 48 selecciones participantes y el primero en celebrarse en tres países: Estados Unidos, México y Canadá. Con 104 partidos distribuidos en 16 ciudades, será el torneo más grande jamás organizado.</p>`);
+        paragraphs.push(`<h2>Lo Que Debes Saber</h2>`);
+        paragraphs.push(`<p>FIFA ha implementado nuevas reglas para esta edición, incluyendo cambios en el formato de grupos y la incorporación de tecnología avanzada para mejorar la experiencia tanto de los jugadores como de los espectadores.</p>`);
+        paragraphs.push(`<p>Los horarios han sido diseñados pensando en las audiencias globales, con partidos programados para maximizar la audiencia televisiva en Europa, América y Asia. Esto significa que habrá fútbol prácticamente a todas horas del día.</p>`);
+      }
+
+      paragraphs.push(`<h2>Sigue el Mundial en CrazyDeportes</h2>`);
+      paragraphs.push(`<p>En CrazyDeportes te mantenemos informado minuto a minuto con todas las noticias, resultados en vivo, estadísticas y análisis del Mundial 2026. No te pierdas ningún detalle del torneo más importante del fútbol mundial.</p>`);
+
+      return paragraphs.join('\n');
+    }
+  </script>
+</body>
+</html>
