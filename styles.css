@@ -1310,12 +1310,12 @@ button {
     top: var(--nav-height);
     left: 0;
     right: 0;
-    bottom: 0;
+    height: calc(100vh - var(--nav-height));
     background: var(--bg-primary);
     flex-direction: column;
     padding: var(--space-xl);
     gap: var(--space-sm);
-    z-index: 999;
+    z-index: 9999;
     overflow-y: auto;
   }
 
