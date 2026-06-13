@@ -422,26 +422,57 @@ document.addEventListener('DOMContentLoaded', async () => {
       .then(res => res.json())
       .then(data => {
         if (data && data.events && data.events.length > 0) {
-          todayMatchesContainer.innerHTML = data.events.map(event => {
-            const timeStr = event.strTime ? event.strTime.substring(0, 5) : '';
-            const homeScore = event.intHomeScore !== null && event.intHomeScore !== undefined ? event.intHomeScore : '';
-            const awayScore = event.intAwayScore !== null && event.intAwayScore !== undefined ? event.intAwayScore : '';
-            const isFinished = event.strStatus === 'FT';
-            const isLive = !isFinished && event.strStatus !== 'NS' && event.strStatus !== null;
+          todayMatchesContainer.innerHTML = '';
 
-            let badgeStr = '';
-            if (isLive) badgeStr = ` <span class="live-dot" style="display:inline-block; margin-left:4px;"></span> <span style="color:var(--red); font-size:0.7rem; font-weight:800;">LIVE</span>`;
-            else if (isFinished) badgeStr = ` <span style="color:var(--text-muted); font-size:0.7rem;">(FT)</span>`;
+          // Separate finished, live, and upcoming matches
+          const finished = data.events.filter(e => e.strStatus === 'FT' || e.strStatus === 'AET' || e.strStatus === 'AP');
+          const live = data.events.filter(e => e.strStatus && e.strStatus !== 'FT' && e.strStatus !== 'AET' && e.strStatus !== 'AP' && e.strStatus !== 'NS' && e.strStatus !== '');
+          const upcoming = data.events.filter(e => !e.strStatus || e.strStatus === 'NS' || e.strStatus === '');
 
-            const scoreStr = (homeScore !== '' || awayScore !== '') ? ` <b>${homeScore} - ${awayScore}</b>` : ' vs ';
+          let html = '';
 
-            return `
-              <div class="sidebar-match">
-                <span class="time">${timeStr}</span>
-                <span>${getFlagEmoji(event.strHomeTeam)} ${event.strHomeTeam}${scoreStr}${event.strAwayTeam} ${getFlagEmoji(event.strAwayTeam)}${badgeStr}</span>
-              </div>
-            `;
-          }).join('');
+          // LIVE matches first
+          if (live.length > 0) {
+            html += `<div style="padding:4px 8px; font-size:0.7rem; font-weight:800; color:var(--red); text-transform:uppercase; border-bottom:1px solid var(--border-color);">🔴 EN VIVO</div>`;
+            live.forEach(event => {
+              const homeScore = event.intHomeScore ?? '';
+              const awayScore = event.intAwayScore ?? '';
+              html += `
+                <div class="sidebar-match" style="background:rgba(239,68,68,0.08); border-left:3px solid var(--red);">
+                  <span class="live-dot" style="display:inline-block;"></span>
+                  <span style="flex:1;">${getFlagEmoji(event.strHomeTeam)} ${event.strHomeTeam} <b style="color:var(--gold); font-size:1.1rem;">${homeScore} - ${awayScore}</b> ${event.strAwayTeam} ${getFlagEmoji(event.strAwayTeam)}</span>
+                </div>`;
+            });
+          }
+
+          // UPCOMING matches
+          if (upcoming.length > 0) {
+            html += `<div style="padding:4px 8px; font-size:0.7rem; font-weight:800; color:var(--gold); text-transform:uppercase; border-bottom:1px solid var(--border-color);">⏰ POR JUGAR</div>`;
+            upcoming.forEach(event => {
+              const timeStr = event.strTime ? event.strTime.substring(0, 5) : '';
+              html += `
+                <div class="sidebar-match">
+                  <span class="time">${timeStr}</span>
+                  <span>${getFlagEmoji(event.strHomeTeam)} ${event.strHomeTeam} vs ${event.strAwayTeam} ${getFlagEmoji(event.strAwayTeam)}</span>
+                </div>`;
+            });
+          }
+
+          // FINISHED matches
+          if (finished.length > 0) {
+            html += `<div style="padding:4px 8px; font-size:0.7rem; font-weight:800; color:var(--green); text-transform:uppercase; border-bottom:1px solid var(--border-color);">✅ FINALIZADOS</div>`;
+            finished.forEach(event => {
+              const homeScore = event.intHomeScore ?? '0';
+              const awayScore = event.intAwayScore ?? '0';
+              html += `
+                <div class="sidebar-match" style="opacity:0.85;">
+                  <span class="time" style="background:var(--green); color:#000; font-weight:800; font-size:0.65rem;">FIN</span>
+                  <span>${getFlagEmoji(event.strHomeTeam)} ${event.strHomeTeam} <b style="color:var(--gold); font-size:1.05rem;">${homeScore} - ${awayScore}</b> ${event.strAwayTeam} ${getFlagEmoji(event.strAwayTeam)}</span>
+                </div>`;
+            });
+          }
+
+          todayMatchesContainer.innerHTML = html;
         } else {
           // If no games today, fallback to showing next 3 scheduled games
           fetch(`https://www.thesportsdb.com/api/v1/json/3/eventsnextleague.php?id=4429`)
