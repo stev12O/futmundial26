@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ---- Clear stale localStorage cache on every page load ----
   // This prevents old/cached content from showing on devices
   try {
-    const cacheVersion = 'fm26_v4'; // Bump this to force cache clear
+    const cacheVersion = 'fm26_v5'; // Bump this to force cache clear
     if (localStorage.getItem('fm26_cache_version') !== cacheVersion) {
       // Remove all fm26_ cached data
       const keysToRemove = [];
@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ---- TV Channels Setup (GoPelotero + National) ----
   const DEFAULT_CHANNELS = [
+    { name: "🏆 RTRTV Mundial", flag: "🏆", url: "https://tv3ecuador.site/hls/stream/index.m3u8", type: "hls" },
     { name: "TyC Sports", flag: "🇦🇷 AR", url: "https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8", type: "hls" },
     { name: "ADN 40 (México)", flag: "🇲🇽 MX", url: "https://mdstrm.com/live-stream-playlist/60b578b060947317de7b57ac.m3u8", type: "hls" },
     { name: "Azteca Internacional", flag: "🇲🇽 MX", url: "https://azt-mun.otteravision.com/azt/mun/mun.m3u8", type: "hls" },
