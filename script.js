@@ -64,12 +64,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ---- TV Channels Setup (GoPelotero + National) ----
   const DEFAULT_CHANNELS = [
     { name: "TyC Sports", flag: "🇦🇷 AR", url: "https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8", type: "hls" },
-    { name: "Canal 5 (Televisa)", flag: "🇲🇽 MX", url: "http://45.5.119.43:4000/play/a05o/index.m3u8", type: "hls" },
+    { name: "ADN 40 (México)", flag: "🇲🇽 MX", url: "https://mdstrm.com/live-stream-playlist/60b578b060947317de7b57ac.m3u8", type: "hls" },
     { name: "Azteca Internacional", flag: "🇲🇽 MX", url: "https://azt-mun.otteravision.com/azt/mun/mun.m3u8", type: "hls" },
     { name: "Latina Televisión", flag: "🇵🇪 PE", url: "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8", type: "hls" },
     { name: "Ecuavisa (Quito)", flag: "🇪🇨 EC", url: "https://redirector.dps.live/hls-video/c54ac2799874375c81c1672abb700870537c5223/ecuavisa/ecuavisa.smil/playlist.m3u8", type: "hls" },
     { name: "Ecuavisa (Guayaquil)", flag: "🇪🇨 EC", url: "https://dai.google.com/linear/hls/event/GyPkTVDZSXGhpOvxPK7m2g/master.m3u8", type: "hls" },
-    { name: "TVN (Chile)", flag: "🇨🇱 CL", url: "http://217.26.190.76:8888/play/a0m6/index.m3u8", type: "hls" },
+    { name: "13C (Chile)", flag: "🇨🇱 CL", url: "https://origin.dpsgo.com/ssai/event/GI-9cp_bT8KcerLpZwkuhw/master.m3u8", type: "hls" },
     { name: "Canal 26", flag: "🇦🇷 AR", url: "https://stream-gtlc.telecentro.net.ar/hls/canal26hls/main.m3u8", type: "hls" },
     { name: "TeleSUR", flag: "🇻🇪 VE", url: "https://mblesmain01.telesur.ultrabase.net/mbliveMain/hd/chunklist.m3u8", type: "hls" },
     { name: "DW Español", flag: "🇩🇪 DE", url: "https://dwamdstream104.akamaized.net/hls/live/2015530/dwstream104/index.m3u8", type: "hls" }
